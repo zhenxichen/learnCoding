@@ -19,9 +19,9 @@ int main() {
 void Qsort(int arr[], int low, int high) {
 	if (low >= high) { return; }
 	
-	int key = arr[low];		//È¡µÚÒ»¸öÊı×÷Îªkey
-	int i = low;			//´Ó×óÍùÓÒÑ°ÕÒ±Èkey´óµÄÊı
-	int j = high + 1;		//´ÓÓÒÍù×óÑ°ÕÒ±ÈkeyĞ¡µÄÊı
+	int key = arr[low];		//å–ç¬¬ä¸€ä¸ªæ•°ä½œä¸ºkey
+	int i = low;			//ä»å·¦å¾€å³å¯»æ‰¾æ¯”keyå¤§çš„æ•°
+	int j = high + 1;		//ä»å³å¾€å·¦å¯»æ‰¾æ¯”keyå°çš„æ•°
 
 	while (true) {
 		while (arr[++i] < key) {
@@ -30,12 +30,12 @@ void Qsort(int arr[], int low, int high) {
 		while (arr[--j] > key) {
 			if (j == low) { break; }
 		}
-		if (i >= j) { break; }						//Á½ÕßÏà½»£¬¼´ÒÑ¾­È«²¿½øĞĞ½»»»
-		swap(arr[i], arr[j]);						//½«Á½¸öÊı½øĞĞ½»»»
+		if (i >= j) { break; }						//ä¸¤è€…ç›¸äº¤ï¼Œå³å·²ç»å…¨éƒ¨è¿›è¡Œäº¤æ¢
+		swap(arr[i], arr[j]);						//å°†ä¸¤ä¸ªæ•°è¿›è¡Œäº¤æ¢
 	}
-	swap(arr[low], arr[j]);							//½«key·ÅÖÁÖĞ¼ä£¨×ó±ß¶¼±ÈkeyĞ¡£¬ÓÒ±ß¶¼±Èkey´ó£©
-													//arr[j]±ÈkeyĞ¡£¬arr[i]±Èkey´ó£¬Òò´ËÓ¦½«arr[j]·ÅÖÁ¿ªÍ·
-	Qsort(arr, low, j - 1);							//×¢Òâ²ÎÊıÓ¦Îªj-1,j+1,Èç¹ûÒÔjÎª²ÎÊı»áµ¼ÖÂStack overflow
+	swap(arr[low], arr[j]);							//å°†keyæ”¾è‡³ä¸­é—´ï¼ˆå·¦è¾¹éƒ½æ¯”keyå°ï¼Œå³è¾¹éƒ½æ¯”keyå¤§ï¼‰
+										//arr[j]æ¯”keyå°ï¼Œarr[i]æ¯”keyå¤§ï¼Œå› æ­¤åº”å°†arr[j]æ”¾è‡³å¼€å¤´
+	Qsort(arr, low, j - 1);							//æ³¨æ„å‚æ•°åº”ä¸ºj-1,j+1,å¦‚æœä»¥jä¸ºå‚æ•°ä¼šå¯¼è‡´Stack overflow
 	Qsort(arr, j + 1, high);
 }
 
