@@ -2,7 +2,7 @@
 #include <stack>
 #include <sstream>
 
-//´æÔÚBUG
+//å­˜åœ¨BUG
 
 using namespace std;
 
@@ -14,8 +14,8 @@ float calcu(char op, float opnd);
 float calcu(float opnd1, char op, float opnd2);
 
 float evaluate(char* S, char* &RPN) {
-	stack<float> opnd;		//ÔËËãÊıÕ»
-	stack<char> optr;		//ÔËËã·ûÕ»
+	stack<float> opnd;		//è¿ç®—æ•°æ ˆ
+	stack<char> optr;		//è¿ç®—ç¬¦æ ˆ
 	
 	optr.push('\0');		
 	while (!optr.empty()) {
@@ -81,14 +81,14 @@ bool isDigit(char c) {
 
 int orderBetween(char top, char c) {
 	const int pri[9][9] = {
-		//		µ±Ç°ÔËËã·û
+		//		å½“å‰è¿ç®—ç¬¦
 		//		+    -   *   /   ^   !   (   )   \0
 				1,	1,	-1,	-1,	-1,	-1,	-1,	1,	1,
-		/*Õ»*/	1,	1,	-1,	-1,	-1,	-1,	-1,	-1,	-1,
-		/*¶¥*/	1,	1,	1,	1,	-1,	-1,	-1,	1,	1,
-		/*ÔË*/	1,	1,	1,	1,	-1,	-1,	-1,	1,	1,
-		/*Ëã*/	1,	1,	1,	1,	1,	-1,	-1,	1,	1,
-		/*·û*/	1,	1,	1,	1,	1,	1,	0,	1,	1,
+		/*æ ˆ*/	1,	1,	-1,	-1,	-1,	-1,	-1,	-1,	-1,
+		/*é¡¶*/	1,	1,	1,	1,	-1,	-1,	-1,	1,	1,
+		/*è¿*/	1,	1,	1,	1,	-1,	-1,	-1,	1,	1,
+		/*ç®—*/	1,	1,	1,	1,	1,	-1,	-1,	1,	1,
+		/*ç¬¦*/	1,	1,	1,	1,	1,	1,	0,	1,	1,
 				-1,	-1,	-1,	-1,	-1,	-1,	-1, 2,  0,
 				0,	0,	0,	0,	0,	0,	0,	0,	0,
 				-1,	-1,	-1,	-1,	-1,	-1,	-1, 0,	2
