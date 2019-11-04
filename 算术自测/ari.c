@@ -3,36 +3,36 @@
 User user_read;
 
 int loginInterface(User* user) {								//chen
-	int option = 1;													//Ñ¡Ïî£º1ÎªµÇÂ¼£¬2Îª×¢²á
-	int ret = 0;													//·µ»ØÖµ£º0ÎªÎ´µÇÂ¼£¬1ÎªµÇÂ¼
-	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);					//»ñÈ¡±ê×¼ÊäÈëÉè±¸¾ä±ú
+	int option = 1;													//é€‰é¡¹ï¼š1ä¸ºç™»å½•ï¼Œ2ä¸ºæ³¨å†Œ
+	int ret = 0;													//è¿”å›å€¼ï¼š0ä¸ºæœªç™»å½•ï¼Œ1ä¸ºç™»å½•
+	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);					//è·å–æ ‡å‡†è¾“å…¥è®¾å¤‡å¥æŸ„
 	COORD crd = { 0,0 };
-	INPUT_RECORD inRec;												//¼ÇÂ¼ÊäÈëĞÅÏ¢
+	INPUT_RECORD inRec;												//è®°å½•è¾“å…¥ä¿¡æ¯
 	DWORD res,mode;
-	CONSOLE_CURSOR_INFO cinfo;										//¹â±ê
-	cinfo.bVisible = 0;												//¹â±êÉèÎª²»¿É¼û
+	CONSOLE_CURSOR_INFO cinfo;										//å…‰æ ‡
+	cinfo.bVisible = 0;												//å…‰æ ‡è®¾ä¸ºä¸å¯è§
 	
 	printf("--------------------------------------\n");
-	printf("»¶Ó­À´µ½Ğ¡Ñ§ËãÊõ×Ô²âÏµÍ³\n");
+	printf("æ¬¢è¿æ¥åˆ°å°å­¦ç®—æœ¯è‡ªæµ‹ç³»ç»Ÿ\n");
 	printf("--------------------------------------\n");
-	printf("ÇëÓÃÊó±êµã»÷Ñ¡Ïî£º\n");
-	printf("<1>µÇÂ¼\n\n");
-	printf("<2>×¢²á\n\n");
+	printf("è¯·ç”¨é¼ æ ‡ç‚¹å‡»é€‰é¡¹ï¼š\n");
+	printf("<1>ç™»å½•\n\n");
+	printf("<2>æ³¨å†Œ\n\n");
 
 	
 	for (;;) {
-		GetConsoleMode(hInput, &mode);										//ÖØÉè¿ØÖÆÌ¨Ä£Ê½
-		mode |= ENABLE_MOUSE_INPUT;											//ÔÊĞíÊó±êÊäÈë
+		GetConsoleMode(hInput, &mode);										//é‡è®¾æ§åˆ¶å°æ¨¡å¼
+		mode |= ENABLE_MOUSE_INPUT;											//å…è®¸é¼ æ ‡è¾“å…¥
 		SetConsoleMode(hInput, mode);
-		ReadConsoleInput(hInput, &inRec, 1, &res);							//¶ÁÈ¡¿ØÖÆÌ¨ÊäÈëĞÅÏ¢
+		ReadConsoleInput(hInput, &inRec, 1, &res);							//è¯»å–æ§åˆ¶å°è¾“å…¥ä¿¡æ¯
 		if (inRec.EventType == MOUSE_EVENT && inRec.Event.MouseEvent.dwButtonState
-			== FROM_LEFT_1ST_BUTTON_PRESSED) {								//°´¼üÎª×ó¼ü
-			if (inRec.Event.MouseEvent.dwMousePosition.Y == 4 &&			//°´¼üÎ»ÖÃÔÚµÇÂ¼°´¼ü¸½½ü
+			== FROM_LEFT_1ST_BUTTON_PRESSED) {								//æŒ‰é”®ä¸ºå·¦é”®
+			if (inRec.Event.MouseEvent.dwMousePosition.Y == 4 &&			//æŒ‰é”®ä½ç½®åœ¨ç™»å½•æŒ‰é”®é™„è¿‘
 				inRec.Event.MouseEvent.dwMousePosition.X < 10) {
 				option = 1;
 				break;
 			}
-			else if (inRec.Event.MouseEvent.dwMousePosition.Y ==6 &&		//°´¼üÎ»ÖÃÔÚ×¢²á°´¼ü¸½½ü
+			else if (inRec.Event.MouseEvent.dwMousePosition.Y ==6 &&		//æŒ‰é”®ä½ç½®åœ¨æ³¨å†ŒæŒ‰é”®é™„è¿‘
 				inRec.Event.MouseEvent.dwMousePosition.X < 10) {
 				option = 2;
 				break;
@@ -44,29 +44,29 @@ int loginInterface(User* user) {								//chen
 
 	system("cls");
 	switch (option) {
-		case 2:enrol(); return 0;											//ÓÃreturn 0´úÌæbreak£¨×¢²áºóĞèÖØĞÂµÇÂ¼£©
-		case 1:return login(user);											//·µ»Ølogin()º¯ÊıµÄ·µ»ØÖµ
+		case 2:enrol(); return 0;											//ç”¨return 0ä»£æ›¿breakï¼ˆæ³¨å†Œåéœ€é‡æ–°ç™»å½•ï¼‰
+		case 1:return login(user);											//è¿”å›login()å‡½æ•°çš„è¿”å›å€¼
 	};
 }
 
 int login(User* p) {								//chen
 	char account[20];
 	char password[20];
-	FILE *fp = fopen("data.txt", "r");					//´ò¿ª´æ´¢Êı¾İµÄÎÄ¼ş
+	FILE *fp = fopen("data.txt", "r");					//æ‰“å¼€å­˜å‚¨æ•°æ®çš„æ–‡ä»¶
 	User user;
 
 	printf("----------------------\n");
-	printf("         µÇÂ¼         \n");
+	printf("         ç™»å½•         \n");
 	printf("----------------------\n");
-	printf("ÇëÊäÈëÄúµÄÕËºÅ£º");
+	printf("è¯·è¾“å…¥æ‚¨çš„è´¦å·ï¼š");
 	scanf("%s", account);
 	for (;;) {
-		if (fread(&user, sizeof(user), 1, fp)) {		//±éÀúÎÄ¼şÀàĞÍ
-			if (!strcmp(account, user.account)) {		//strcmp·µ»ØÖµÎª0±íÊ¾ÊäÈëÕËºÅÓë¸ÃÕËºÅÏàÍ¬
-				printf("ÇëÊäÈëÄúµÄÃÜÂë£º");
-				scanf("%s", password);					//ÊäÈëÃÜÂë
+		if (fread(&user, sizeof(user), 1, fp)) {		//éå†æ–‡ä»¶ç±»å‹
+			if (!strcmp(account, user.account)) {		//strcmpè¿”å›å€¼ä¸º0è¡¨ç¤ºè¾“å…¥è´¦å·ä¸è¯¥è´¦å·ç›¸åŒ
+				printf("è¯·è¾“å…¥æ‚¨çš„å¯†ç ï¼š");
+				scanf("%s", password);					//è¾“å…¥å¯†ç 
 				if (strcmp(password, user.password)) {
-					printf("ÃÜÂëÊäÈë´íÎó£¬ÇëÖØÊÔ\n");
+					printf("å¯†ç è¾“å…¥é”™è¯¯ï¼Œè¯·é‡è¯•\n");
 					system("pause");
 					fclose(fp);
 					return 0;
@@ -77,8 +77,8 @@ int login(User* p) {								//chen
 				return 1;
 			}
 		}
-		else {											//fread·µ»ØÖµÎª0£¬¼´ÒÑ¾­È«²¿¶ÁÈ¡
-			printf("¸ÃÕËºÅ²»´æÔÚ£¬ÇëÖØÊÔ\n");
+		else {											//freadè¿”å›å€¼ä¸º0ï¼Œå³å·²ç»å…¨éƒ¨è¯»å–
+			printf("è¯¥è´¦å·ä¸å­˜åœ¨ï¼Œè¯·é‡è¯•\n");
 			system("pause");
 			fclose(fp);
 			return 0;
@@ -93,11 +93,11 @@ void enrol() {										//chen
 	char input[50];
 	
 	for (;;) {
-		printf("ÇëÉèÖÃÄúµÄÕËºÅ£º");
-		fflush(stdin);								//Çå¿Õ»º³åÇø
+		printf("è¯·è®¾ç½®æ‚¨çš„è´¦å·ï¼š");
+		fflush(stdin);								//æ¸…ç©ºç¼“å†²åŒº
 		scanf("%s", &input);
-		if (strlen(input) > 19) {					//Èô×Ö·û´®³¤¶È³¬¹ı19¸ö×Ö·û
-			printErrorSituation(4);					//ÒªÇóÓÃ»§ÖØĞÂÉèÖÃ
+		if (strlen(input) > 19) {					//è‹¥å­—ç¬¦ä¸²é•¿åº¦è¶…è¿‡19ä¸ªå­—ç¬¦
+			printErrorSituation(4);					//è¦æ±‚ç”¨æˆ·é‡æ–°è®¾ç½®
 			system("pause");
 			system("cls");
 		}
@@ -108,7 +108,7 @@ void enrol() {										//chen
 	}
 	system("cls");
 	for (;;) {
-		printf("ÇëÉèÖÃÄúµÄÃÜÂë£º");
+		printf("è¯·è®¾ç½®æ‚¨çš„å¯†ç ï¼š");
 		fflush(stdin);
 		scanf("%s", &input);
 		if (strlen(input) > 19) {
@@ -122,10 +122,10 @@ void enrol() {										//chen
 		}
 	}
 	system("cls");
-	printf("ÇëÊäÈëÄúµÄĞÕÃû£º");
+	printf("è¯·è¾“å…¥æ‚¨çš„å§“åï¼š");
 	scanf("%s", &newUser.name);
 	system("cls");
-	if (IDYES == MessageBox(NULL, "ÄúÊÇÀÏÊ¦Âğ", "Éí·İÈ·ÈÏ", MB_YESNO)) {
+	if (IDYES == MessageBox(NULL, "æ‚¨æ˜¯è€å¸ˆå—", "èº«ä»½ç¡®è®¤", MB_YESNO)) {
 		newUser.isTeacher = 1;
 	}
 	else {
@@ -133,7 +133,7 @@ void enrol() {										//chen
 	}
 	system("cls");
 	
-	newUser.record.numberOfAddQuestions = 0;		//³õÊ¼»¯×öÌâ¼ÇÂ¼Êı¾İ
+	newUser.record.numberOfAddQuestions = 0;		//åˆå§‹åŒ–åšé¢˜è®°å½•æ•°æ®
 	newUser.record.numberOfDiv = 0;
 	newUser.record.numberOfMul = 0;
 	newUser.record.numberOfQuestions = 0;
@@ -146,11 +146,11 @@ void enrol() {										//chen
 	newUser.record.level = 1;
 	newUser.record.evaluation[0] = '\0';
 	
-	isRepeat = checkRepeat(newUser);					//·ÀÖ¹ÓÃ»§Ãû»òĞÕÃûÖØ¸´
+	isRepeat = checkRepeat(newUser);					//é˜²æ­¢ç”¨æˆ·åæˆ–å§“åé‡å¤
 	if (!isRepeat) {
-		fp = fopen("data.txt", "a");					//´ò¿ª´æ´¢Êı¾İµÄÎÄ¼ş
+		fp = fopen("data.txt", "a");					//æ‰“å¼€å­˜å‚¨æ•°æ®çš„æ–‡ä»¶
 		fwrite(&newUser, sizeof(User), 1, fp);
-		printf("×¢²áÍê³É£¬ÇëÖØĞÂµÇÂ¼\n");
+		printf("æ³¨å†Œå®Œæˆï¼Œè¯·é‡æ–°ç™»å½•\n");
 		fclose(fp);
 	}
 	else {
@@ -161,25 +161,25 @@ void enrol() {										//chen
 }
 
 int teacherInterface(User *p) {						//chen
-	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);			//»ñÈ¡±ê×¼ÊäÈë¾ä±ú
-	INPUT_RECORD inRec;										//´æ´¢ÊäÈë¼ÇÂ¼
-	DWORD mode;												//´æ´¢¿ØÖÆÌ¨Ä£Ê½
-	int option = 0;											//¼ÇÂ¼ÓÃ»§Ñ¡Ôñ
+	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);			//è·å–æ ‡å‡†è¾“å…¥å¥æŸ„
+	INPUT_RECORD inRec;										//å­˜å‚¨è¾“å…¥è®°å½•
+	DWORD mode;												//å­˜å‚¨æ§åˆ¶å°æ¨¡å¼
+	int option = 0;											//è®°å½•ç”¨æˆ·é€‰æ‹©
 
-	printf("%sÀÏÊ¦£¬ÄúºÃ\n",user_read.name);
-	printf("ÇëÊó±êµã»÷ÄúÒªÊ¹ÓÃµÄ¹¦ÄÜ\n");
-	printf("<1>·¢²¼¹«¸æ\n\n");
-	printf("<2>¶ÔÑ§Éú½øĞĞÆÀ¼Û\n\n");
-	printf("<3>¶ÔÏµÍ³½øĞĞÆÀ¼Û\n\n");
-	printf("<4>²é¿´Ñ§ÉúÅÅĞĞ\n\n");
-	printf("<5>ÍË³ö\n");
+	printf("%sè€å¸ˆï¼Œæ‚¨å¥½\n",user_read.name);
+	printf("è¯·é¼ æ ‡ç‚¹å‡»æ‚¨è¦ä½¿ç”¨çš„åŠŸèƒ½\n");
+	printf("<1>å‘å¸ƒå…¬å‘Š\n\n");
+	printf("<2>å¯¹å­¦ç”Ÿè¿›è¡Œè¯„ä»·\n\n");
+	printf("<3>å¯¹ç³»ç»Ÿè¿›è¡Œè¯„ä»·\n\n");
+	printf("<4>æŸ¥çœ‹å­¦ç”Ÿæ’è¡Œ\n\n");
+	printf("<5>é€€å‡º\n");
 
 	for (;;) {
-		GetConsoleMode(hStdIn, &mode);						//»ñÈ¡¿ØÖÆÌ¨Ä£Ê½
-		mode |= ENABLE_MOUSE_INPUT;							//ÔÊĞíÊó±êÊäÈë
-		SetConsoleMode(hStdIn, mode);						//ÖØÉè¿ØÖÆÌ¨Ä£Ê½
-		ReadConsoleInput(hStdIn, &inRec, 1, &mode);			//¶ÁÈ¡¿ØÖÆÌ¨ÊäÈëµ½inRec
-		if (inRec.EventType == MOUSE_EVENT &&				//ÅĞ¶ÏÊó±êµã»÷Î»ÖÃ
+		GetConsoleMode(hStdIn, &mode);						//è·å–æ§åˆ¶å°æ¨¡å¼
+		mode |= ENABLE_MOUSE_INPUT;							//å…è®¸é¼ æ ‡è¾“å…¥
+		SetConsoleMode(hStdIn, mode);						//é‡è®¾æ§åˆ¶å°æ¨¡å¼
+		ReadConsoleInput(hStdIn, &inRec, 1, &mode);			//è¯»å–æ§åˆ¶å°è¾“å…¥åˆ°inRec
+		if (inRec.EventType == MOUSE_EVENT &&				//åˆ¤æ–­é¼ æ ‡ç‚¹å‡»ä½ç½®
 			inRec.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
 			if (inRec.Event.MouseEvent.dwMousePosition.Y == 2 &&
 				inRec.Event.MouseEvent.dwMousePosition.X < 10) {
@@ -212,11 +212,11 @@ int teacherInterface(User *p) {						//chen
 	system("cls");
 
 	switch (option) {
-		case 5: return 0;						//<5>ÍË³öÏµÍ³
-		case 4: viewRank(); return 1;			//<4>²é¿´Ñ§ÉúÅÅĞĞ
-		case 3: commentSystem(); return 1;		//<3>¶ÔÏµÍ³½øĞĞÆÀ¼Û
-		case 2: commentStudent(); return 1;		//<2>¶ÔÑ§Éú½øĞĞÆÀ¼Û
-		case 1: announce(); return 1;			//<1>·¢²¼¹«¸æ
+		case 5: return 0;						//<5>é€€å‡ºç³»ç»Ÿ
+		case 4: viewRank(); return 1;			//<4>æŸ¥çœ‹å­¦ç”Ÿæ’è¡Œ
+		case 3: commentSystem(); return 1;		//<3>å¯¹ç³»ç»Ÿè¿›è¡Œè¯„ä»·
+		case 2: commentStudent(); return 1;		//<2>å¯¹å­¦ç”Ÿè¿›è¡Œè¯„ä»·
+		case 1: announce(); return 1;			//<1>å‘å¸ƒå…¬å‘Š
 		default: break;
 	}
 	
@@ -224,28 +224,28 @@ int teacherInterface(User *p) {						//chen
 }
 
 int studentInterface(User* p) {					//chen
-	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);			//»ñÈ¡±ê×¼ÊäÈë¾ä±ú
-	INPUT_RECORD inRec;										//ÓÃÒÔ¼ÇÂ¼Êó±êÊäÈë
-	DWORD mode;												//ÓÃÒÔ´æ´¢¿ØÖÆÌ¨Ä£Ê½
-	int option = 0;											//±ê¼ÇÓÃ»§Ñ¡Ôñ
+	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);			//è·å–æ ‡å‡†è¾“å…¥å¥æŸ„
+	INPUT_RECORD inRec;										//ç”¨ä»¥è®°å½•é¼ æ ‡è¾“å…¥
+	DWORD mode;												//ç”¨ä»¥å­˜å‚¨æ§åˆ¶å°æ¨¡å¼
+	int option = 0;											//æ ‡è®°ç”¨æˆ·é€‰æ‹©
 
-	printf("%sÍ¬Ñ§£¬ÄãºÃ\n", user_read.name);
-	printf("ÇëÊó±êµã»÷ÄúÒªÊ¹ÓÃµÄ¹¦ÄÜ\n");
-	printf("<1>²é¿´ĞÅÏ¢\n\n");
-	printf("<2>×Ô²âÁ·Ï°\n\n");
-	printf("<3>²é¿´´íÌâ±¾\n\n");
-	printf("<4>´³¹ØÄ£Ê½\n\n");
-	printf("<5>¼ÆÊ±Ä£Ê½\n\n");
-	printf("<6>¼¤Çé60s\n\n");
-	printf("<7>ÍË³ö\n\n");
+	printf("%såŒå­¦ï¼Œä½ å¥½\n", user_read.name);
+	printf("è¯·é¼ æ ‡ç‚¹å‡»æ‚¨è¦ä½¿ç”¨çš„åŠŸèƒ½\n");
+	printf("<1>æŸ¥çœ‹ä¿¡æ¯\n\n");
+	printf("<2>è‡ªæµ‹ç»ƒä¹ \n\n");
+	printf("<3>æŸ¥çœ‹é”™é¢˜æœ¬\n\n");
+	printf("<4>é—¯å…³æ¨¡å¼\n\n");
+	printf("<5>è®¡æ—¶æ¨¡å¼\n\n");
+	printf("<6>æ¿€æƒ…60s\n\n");
+	printf("<7>é€€å‡º\n\n");
 
 	for (;;) {
-		GetConsoleMode(hStdIn, &mode);						//½«¿ØÖÆÌ¨Ä£Ê½´æ´¢µ½modeÖĞ
-		mode |= ENABLE_MOUSE_INPUT;							//¿ØÖÆÌ¨Ä£Ê½Éè¶¨ÎªÔÊĞíÊó±êÊäÈë
-		SetConsoleMode(hStdIn, mode);						//ÉèÖÃ¿ØÖÆÌ¨Ä£Ê½
-		ReadConsoleInput(hStdIn, &inRec, 1, &mode);			//¶ÁÈ¡¿ØÖÆÌ¨ÊäÈë
-		if (inRec.EventType == MOUSE_EVENT &&				//ÊÂ¼şÀàĞÍÎªÊó±êÊÂ¼ş
-			inRec.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {		//ÊÂ¼şÎªÊó±ê×ó¼üµã»÷
+		GetConsoleMode(hStdIn, &mode);						//å°†æ§åˆ¶å°æ¨¡å¼å­˜å‚¨åˆ°modeä¸­
+		mode |= ENABLE_MOUSE_INPUT;							//æ§åˆ¶å°æ¨¡å¼è®¾å®šä¸ºå…è®¸é¼ æ ‡è¾“å…¥
+		SetConsoleMode(hStdIn, mode);						//è®¾ç½®æ§åˆ¶å°æ¨¡å¼
+		ReadConsoleInput(hStdIn, &inRec, 1, &mode);			//è¯»å–æ§åˆ¶å°è¾“å…¥
+		if (inRec.EventType == MOUSE_EVENT &&				//äº‹ä»¶ç±»å‹ä¸ºé¼ æ ‡äº‹ä»¶
+			inRec.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {		//äº‹ä»¶ä¸ºé¼ æ ‡å·¦é”®ç‚¹å‡»
 			if (inRec.Event.MouseEvent.dwMousePosition.Y == 2 &&
 				inRec.Event.MouseEvent.dwMousePosition.X < 10) {
 				option = 1;
@@ -285,13 +285,13 @@ int studentInterface(User* p) {					//chen
 	}
 	system("cls");
 	switch (option) {
-		case 7: return 0;						//<7>ÍË³ö£¨·µ»Ø0±íÊ¾²»ÔÙÎ¬³ÖÏµÍ³ÔËĞĞ£©
-		case 6: limitTimeExercise(); return 1;	//<6>¼¤Çé60s
-		case 5: timeExercise();	return 1;		//<5>¼ÆÊ±Ä£Ê½
-		case 4: breakThrough();	return 1;		//<4>´³¹ØÄ£Ê½
-		case 3: watchBank(); return 1;			//<3>²é¿´´íÌâ±¾
-		case 2: exerciseYourself();	return 1;	//<2>×Ô²âÁ·Ï°
-		case 1: checkInfo(); return 1;			//<1>²é¿´ĞÅÏ¢
+		case 7: return 0;						//<7>é€€å‡ºï¼ˆè¿”å›0è¡¨ç¤ºä¸å†ç»´æŒç³»ç»Ÿè¿è¡Œï¼‰
+		case 6: limitTimeExercise(); return 1;	//<6>æ¿€æƒ…60s
+		case 5: timeExercise();	return 1;		//<5>è®¡æ—¶æ¨¡å¼
+		case 4: breakThrough();	return 1;		//<4>é—¯å…³æ¨¡å¼
+		case 3: watchBank(); return 1;			//<3>æŸ¥çœ‹é”™é¢˜æœ¬
+		case 2: exerciseYourself();	return 1;	//<2>è‡ªæµ‹ç»ƒä¹ 
+		case 1: checkInfo(); return 1;			//<1>æŸ¥çœ‹ä¿¡æ¯
 	}
 	
 	return 1;	
@@ -300,7 +300,7 @@ int studentInterface(User* p) {					//chen
 void announce() {								//chen
 	FILE *fp = fopen("announce.txt", "a");
 	char announceText[1001];
-	printf("ÇëÊäÈë¹«¸æÄÚÈİ(×î¶à1000×Ö)£º\n");
+	printf("è¯·è¾“å…¥å…¬å‘Šå†…å®¹(æœ€å¤š1000å­—)ï¼š\n");
 	scanf("%s", announceText);
 	fprintf(fp, "%s\n", announceText);
 	fclose(fp);
@@ -314,7 +314,7 @@ Node* studentList() {							//chen
 	FILE* fp = fopen("data.txt", "r");
 	pHead->pNext = NULL;
 	while (fread(&user, sizeof(user), 1, fp) == 1) {
-		if (user.isTeacher == 0) {					//Èô¸ÃÓÃ»§²»ÊÇÀÏÊ¦£¬Ôò¼ÓÈëÁ´±í
+		if (user.isTeacher == 0) {					//è‹¥è¯¥ç”¨æˆ·ä¸æ˜¯è€å¸ˆï¼Œåˆ™åŠ å…¥é“¾è¡¨
 			pEnd = insertList(pEnd, user);
 		}
 	}
@@ -332,16 +332,16 @@ Node* insertList(Node* pEnd, User user) {		//chen
 
 void commentStudent() {							//chen
 	char name[10];
-	int find = 0;								//±ê¼ÇÊÇ·ñÕÒµ½¶ÔÓ¦Ñ§Éú
-	FILE *fp = fopen("data.txt","rt+");			//´ò¿ªÎÄ±¾£¨ÔÊĞí¶ÁĞ´£©
+	int find = 0;								//æ ‡è®°æ˜¯å¦æ‰¾åˆ°å¯¹åº”å­¦ç”Ÿ
+	FILE *fp = fopen("data.txt","rt+");			//æ‰“å¼€æ–‡æœ¬ï¼ˆå…è®¸è¯»å†™ï¼‰
 	User user;
-	char comment[1001];							//ÆÀÓïÄÚÈİ
+	char comment[1001];							//è¯„è¯­å†…å®¹
 
-	printf("ÇëÊäÈëÒªÆÀ¼ÛÑ§ÉúµÄĞÕÃû£º");
+	printf("è¯·è¾“å…¥è¦è¯„ä»·å­¦ç”Ÿçš„å§“åï¼š");
 	scanf("%s", name);
 
 	while (fread(&user, sizeof(user), 1, fp)) {
-		if (!strcmp(user.name, name)) {			//strcmp()·µ»ØÖµÎª0£¬¼´Ãû×Ö¶ÔÓ¦
+		if (!strcmp(user.name, name)) {			//strcmp()è¿”å›å€¼ä¸º0ï¼Œå³åå­—å¯¹åº”
 			find = 1;
 			break;
 		}
@@ -349,14 +349,14 @@ void commentStudent() {							//chen
 	
 	if (find) {
 		fseek(fp, -(long)sizeof(User), SEEK_CUR);
-		printf("ÇëÊäÈëÆÀÓï£º\n");
+		printf("è¯·è¾“å…¥è¯„è¯­ï¼š\n");
 		scanf("%s",user.record.evaluation);
 		fwrite(&user, sizeof(user), 1, fp);
 		fclose(fp);
-		printf("ÆÀ¼ÛÍê³É\n");
+		printf("è¯„ä»·å®Œæˆ\n");
 	}
 	else {
-		printf("Î´ÕÒµ½¸ÃÑ§Éú\n");
+		printf("æœªæ‰¾åˆ°è¯¥å­¦ç”Ÿ\n");
 	}
 	system("pause");
 	system("cls");
@@ -366,7 +366,7 @@ void commentStudent() {							//chen
 void commentSystem() {					//chen
 	FILE* fp = fopen("comments.txt","a");
 	char commentSystemText[1001];
-	printf("ÇëÁôÏÂÄú¶ÔÕâ¸öÈí¼şµÄÒâ¼ûºÍ½¨Òé£º\n");
+	printf("è¯·ç•™ä¸‹æ‚¨å¯¹è¿™ä¸ªè½¯ä»¶çš„æ„è§å’Œå»ºè®®ï¼š\n");
 	scanf("%s", commentSystemText);
 	fprintf(fp, commentSystemText);
 	fclose(fp);
@@ -374,15 +374,15 @@ void commentSystem() {					//chen
 }
 
 void viewRank() {						//chen
-	Node* pHead = studentList();		//´´½¨Ñ§ÉúÁ´±í²¢ÌîÈëÊı¾İ
+	Node* pHead = studentList();		//åˆ›å»ºå­¦ç”Ÿé“¾è¡¨å¹¶å¡«å…¥æ•°æ®
 	Node* p = NULL;
 	int rank = 0;
 	
-	pHead = sort(pHead);				//¶ÔÁ´±í½øĞĞÃ°ÅİÅÅĞò
-	printf("Ãû´Î\tĞÕÃû\t×öÌâÁ¿\n");
-	for (p = pHead->pNext; p; p = p->pNext) {	//±éÀúÁ´±í
+	pHead = sort(pHead);				//å¯¹é“¾è¡¨è¿›è¡Œå†’æ³¡æ’åº
+	printf("åæ¬¡\tå§“å\tåšé¢˜é‡\n");
+	for (p = pHead->pNext; p; p = p->pNext) {	//éå†é“¾è¡¨
 		rank++;
-		printf("µÚ%dÃû\t%s\t%d\n", rank, p->user.name, p->user.record.numberOfQuestions);
+		printf("ç¬¬%då\t%s\t%d\n", rank, p->user.name, p->user.record.numberOfQuestions);
 	}
 	system("pause");
 	system("cls");
@@ -390,109 +390,109 @@ void viewRank() {						//chen
 }
 
 void limitTimeExercise() {				//feng
-	int difficulty;//ÄÑ¶È
-	int num1, num2;// ËãÊ½µÄÁ½¸öÊı 
-	int answer;//´ğ°¸ 
-	int kind = 1; //ËãÊ½ÖÖÀà 
-	int grades = 0;//ÓÎÏ·µÃ·Ö 
+	int difficulty;//éš¾åº¦
+	int num1, num2;// ç®—å¼çš„ä¸¤ä¸ªæ•° 
+	int answer;//ç­”æ¡ˆ 
+	int kind = 1; //ç®—å¼ç§ç±» 
+	int grades = 0;//æ¸¸æˆå¾—åˆ† 
 	int temp;
 	int rest;
-	time_t start, end; //¼ÆÊ± 
+	time_t start, end; //è®¡æ—¶ 
 	srand((unsigned)time(NULL));
-	//´òÓ¡ÌáÊ¾ 
-	printf("»¶Ó­À´µ½¡°¼¤Çé60Ãë¡±\n");
-	printf("Äã½«ÓĞ60ÃëµÄÊ±¼ä½øĞĞ´ğÌâ£¬Äã¿ÉÒÔÑ¡Ôñ1£¬2£¬3Èı¸öÄÑ¶È£¬Èç¹ûÔÚÄã»Ø´ğÌâÄ¿µÄÊ±ºòµ½Ê±¼äÁË");
+	//æ‰“å°æç¤º 
+	printf("æ¬¢è¿æ¥åˆ°â€œæ¿€æƒ…60ç§’â€\n");
+	printf("ä½ å°†æœ‰60ç§’çš„æ—¶é—´è¿›è¡Œç­”é¢˜ï¼Œä½ å¯ä»¥é€‰æ‹©1ï¼Œ2ï¼Œ3ä¸‰ä¸ªéš¾åº¦ï¼Œå¦‚æœåœ¨ä½ å›ç­”é¢˜ç›®çš„æ—¶å€™åˆ°æ—¶é—´äº†");
 
-	printf("£¬ÏµÍ³½«¸øÄã»Ø´ğÍêÖ®ºó½áËã·ÖÊı£¬µ«ÊÇ²»¼ÆÈë³É¼¨¡£¼ÓÓÍ£¡\n");
+	printf("ï¼Œç³»ç»Ÿå°†ç»™ä½ å›ç­”å®Œä¹‹åç»“ç®—åˆ†æ•°ï¼Œä½†æ˜¯ä¸è®¡å…¥æˆç»©ã€‚åŠ æ²¹ï¼\n");
 	system("pause");
 	system("cls");
 	difficulty = setDifficulty();
 
 
-	start = time(NULL);   //¿ªÊ¼¼ÆÊ± 
+	start = time(NULL);   //å¼€å§‹è®¡æ—¶ 
 	end = time(NULL);
 	for (; (end - start) < 60; end = time(NULL), kind++) {
 		if (kind == 5) kind = 1;
-		if (difficulty == 1) {    //ÄÑ¶È1 
+		if (difficulty == 1) {    //éš¾åº¦1 
 			num1 = rand() % 10 + 1;
-			num2 = rand() % 10 + 1;//Éú³ÉÒ»Î»¼òµ¥µÄÊı×Ö
-			printf("Ğ¡ÅóÓÑ£¬Äã»¹Ê£ÏÂ%dÃë¡£\n", 60 - (end - start));
+			num2 = rand() % 10 + 1;//ç”Ÿæˆä¸€ä½ç®€å•çš„æ•°å­—
+			printf("å°æœ‹å‹ï¼Œä½ è¿˜å‰©ä¸‹%dç§’ã€‚\n", 60 - (end - start));
 
 			if (num1 < num2) { temp = num1; num1 = num2; num2 = temp; }
-			switch (kind) {    //¸ù¾İÖÖÀàÀ´Éú³ÉËãÊ½ ²¢¼ÇÏÂ´ğÌâ¼ÇÂ¼ 
-			case 1:printf("%d + %d = £¿\n", num1, num2); fflush(stdin); scanf("%d", &answer);
-				recording((num1 + num2) == answer, kind, num1, num2); if ((num1 + num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+			switch (kind) {    //æ ¹æ®ç§ç±»æ¥ç”Ÿæˆç®—å¼ å¹¶è®°ä¸‹ç­”é¢˜è®°å½• 
+			case 1:printf("%d + %d = ï¼Ÿ\n", num1, num2); fflush(stdin); scanf("%d", &answer);
+				recording((num1 + num2) == answer, kind, num1, num2); if ((num1 + num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
-			case 2:printf("%d - %d = £¿\n", num1, num2); fflush(stdin); scanf("%d", &answer);
-				recording((num1 - num2) == answer, kind, num1, num2);  if ((num1 - num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+			case 2:printf("%d - %d = ï¼Ÿ\n", num1, num2); fflush(stdin); scanf("%d", &answer);
+				recording((num1 - num2) == answer, kind, num1, num2);  if ((num1 - num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
-			case 3:printf("%d * %d = £¿\n", num1, num2); fflush(stdin); scanf("%d", &answer);
-				recording((num1*num2) == answer, kind, num1, num2);  if ((num1*num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+			case 3:printf("%d * %d = ï¼Ÿ\n", num1, num2); fflush(stdin); scanf("%d", &answer);
+				recording((num1*num2) == answer, kind, num1, num2);  if ((num1*num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
-			case 4:printf("%d / %d = £¿\n", num1, num2); fflush(stdin); scanf("%d%d", &answer, &rest);
+			case 4:printf("%d / %d = ï¼Ÿ\n", num1, num2); fflush(stdin); scanf("%d%d", &answer, &rest);
 				recording((num1 / num2) == answer && (num1%num2) == rest, kind, num1, num2);
-				if ((num1 / num2) == answer && (num1%num2) == rest) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1 / num2) == answer && (num1%num2) == rest) { printf("æ­£ç¡®ï¼\n"); grades++;
 				} break;
 			}
 		}
-		else if (difficulty == 2) {   //ÄÑ¶È2 
+		else if (difficulty == 2) {   //éš¾åº¦2 
 			num1 = rand() % 101 + 1;
 			num2 = rand() % 101 + 1;
 			switch (kind) {
 			case 1:printf("%d + %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1 + num2) == answer, kind, num1, num2); 
-				if ((num1 + num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1 + num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
 			case 2:printf("%d - %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1 - num2) == answer, kind, num1, num2);  
-				if ((num1 - num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1 - num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
 			case 3:printf("%d * %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1*num2) == answer, kind, num1, num2);  
-				if ((num1*num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1*num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
-			case 4:printf("%d / %d = £¿\n", num1, num2); fflush(stdin); scanf("%d%d", &answer, &rest);
+			case 4:printf("%d / %d = ï¼Ÿ\n", num1, num2); fflush(stdin); scanf("%d%d", &answer, &rest);
 				recording((num1 / num2) == answer && (num1%num2) == rest, kind, num1, num2);
-				if ((num1 / num2) == answer && (num1%num2) == rest) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1 / num2) == answer && (num1%num2) == rest) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
 			}
 		}
-		else if (difficulty == 3) {   //ÄÑ¶È3 
+		else if (difficulty == 3) {   //éš¾åº¦3 
 			num1 = rand() % 1001 + 1;
 			num2 = rand() % 1001 + 1;
 			switch (kind) {
 			case 1:printf("%d + %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1 + num2) == answer, kind, num1, num2); 
-				if ((num1 + num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1 + num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
 			case 2:printf("%d - %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1 - num2) == answer, kind, num1, num2);
-				if ((num1 - num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1 - num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
 			case 3:printf("%d * %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1*num2) == answer, kind, num1, num2);  
-				if ((num1*num2) == answer) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1*num2) == answer) { printf("æ­£ç¡®ï¼\n"); grades++;
 				}
 				break;
-			case 4:printf("%d / %d = £¿\n", num1, num2); fflush(stdin); scanf("%d%d", &answer, &rest);
+			case 4:printf("%d / %d = ï¼Ÿ\n", num1, num2); fflush(stdin); scanf("%d%d", &answer, &rest);
 				recording((num1 / num2) == answer && (num1%num2) == rest, kind, num1, num2);
-				if ((num1 / num2) == answer && (num1%num2) == rest) { printf("ÕıÈ·£¡\n"); grades++;
+				if ((num1 / num2) == answer && (num1%num2) == rest) { printf("æ­£ç¡®ï¼\n"); grades++;
 				} break;
 			}
 		}
 		system("pause");
 		system("cls");
 	}
-	printf("ÓÎÏ·½áÊø£¡Ğ¡ÅóÓÑ£¬ÄãÒ»¹²´ğ¶ÔÁË%dÌâ\n", grades);
+	printf("æ¸¸æˆç»“æŸï¼å°æœ‹å‹ï¼Œä½ ä¸€å…±ç­”å¯¹äº†%dé¢˜\n", grades);
 	system("pause");
 	system("cls");
 }
@@ -501,50 +501,50 @@ void timeExercise() {					//yu
 	clock_t start;
 	clock_t end;
 	displayTimeExercise();
-	start = clock();						//¿ªÊ¼¼ÆÊ± 
+	start = clock();						//å¼€å§‹è®¡æ—¶ 
 	timeExerciseProcess();
-	end = (clock() - start);				//¼ÆÊ±½áÊø 
-	printf("ÓÃÊ±Îª%dÃë\n", end / 1000);
+	end = (clock() - start);				//è®¡æ—¶ç»“æŸ 
+	printf("ç”¨æ—¶ä¸º%dç§’\n", end / 1000);
 
-	Sleep(4000);								//ÔİÍ£4Ãë 
+	Sleep(4000);								//æš‚åœ4ç§’ 
 	system("cls");
 }
 
 void displayTimeExercise() {			//yu
 	int difficulity;
-	printf("\n			**************************»¶Ó­½øÈë¼ÆÊ±Á·Ï°Ä£Ê½************************\n");
-	printf("				£¨ÏµÍ³½«»áÎªÄã³ö10µÀ¼ÆËãÌâ£¬Íê³Éºó»á¸æÖªÄãËùÓÃÊ±¼ä£©\n");
+	printf("\n			**************************æ¬¢è¿è¿›å…¥è®¡æ—¶ç»ƒä¹ æ¨¡å¼************************\n");
+	printf("				ï¼ˆç³»ç»Ÿå°†ä¼šä¸ºä½ å‡º10é“è®¡ç®—é¢˜ï¼Œå®Œæˆåä¼šå‘ŠçŸ¥ä½ æ‰€ç”¨æ—¶é—´ï¼‰\n");
 }
 
 void printDifficulty(int n) {
 	switch (n) {
-	case 1:printf("\n						     µ±Ç°Îª¼òµ¥Ä£Ê½\n\n\n"); break;
-	case 2:printf("\n						     µ±Ç°ÎªÒ»°ãÄ£Ê½\n\n\n"); break;
-	case 3:printf("\n						     µ±Ç°ÎªÀ§ÄÑÄ£Ê½\n\n\n"); break;
+	case 1:printf("\n						     å½“å‰ä¸ºç®€å•æ¨¡å¼\n\n\n"); break;
+	case 2:printf("\n						     å½“å‰ä¸ºä¸€èˆ¬æ¨¡å¼\n\n\n"); break;
+	case 3:printf("\n						     å½“å‰ä¸ºå›°éš¾æ¨¡å¼\n\n\n"); break;
 	}
 }
 
 void timeExerciseProcess() {			//yu
-	int num1, num2;					//num1ÎªËãÊıÌâµÄµÚÒ»¸öÊı£¬num2ÎªµÚ¶ş¸öÊı 
-	int kindrandom;				//Ëæ»úÊı¿ØÖÆËãÊıÌâµÄ·ûºÅ 
-	int answer;						//ÓÃ»§µÄ´ğ°¸ 
-	char kind;						//ËãÊı·ûºÅ 
-	int shang;						//³ı·¨µÄÉÌ 
-	int yushu;						//³ı·¨µÄÓàÊı 
-	int rightcount = 0;			   	//×ö¶ÔÌâÊı 
-	int wrongcount = 0;				//×ö´íÌâÊı 
-	int difficulty = 0;				    //ÄÑ¶È 
+	int num1, num2;					//num1ä¸ºç®—æ•°é¢˜çš„ç¬¬ä¸€ä¸ªæ•°ï¼Œnum2ä¸ºç¬¬äºŒä¸ªæ•° 
+	int kindrandom;				//éšæœºæ•°æ§åˆ¶ç®—æ•°é¢˜çš„ç¬¦å· 
+	int answer;						//ç”¨æˆ·çš„ç­”æ¡ˆ 
+	char kind;						//ç®—æ•°ç¬¦å· 
+	int shang;						//é™¤æ³•çš„å•† 
+	int yushu;						//é™¤æ³•çš„ä½™æ•° 
+	int rightcount = 0;			   	//åšå¯¹é¢˜æ•° 
+	int wrongcount = 0;				//åšé”™é¢˜æ•° 
+	int difficulty = 0;				    //éš¾åº¦ 
 	int i = 0;
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
 	INPUT_RECORD inRec;
 	DWORD mode;
 
 
-	printf("\n						    *ÇëÑ¡ÔñÄÑÒ×³Ì¶È*\n");
-	printf("\n              1------¼òµ¥     2------Ò»°ã     3------À§ÄÑ\n\n\n");
+	printf("\n						    *è¯·é€‰æ‹©éš¾æ˜“ç¨‹åº¦*\n");
+	printf("\n              1------ç®€å•     2------ä¸€èˆ¬     3------å›°éš¾\n\n\n");
 
 
-begin:																			//goto Óï¾äÌø×ª 
+begin:																			//goto è¯­å¥è·³è½¬ 
 	while (!difficulty) {
 		GetConsoleMode(hStdIn, &mode);
 		mode |= ENABLE_MOUSE_INPUT;
@@ -568,38 +568,38 @@ begin:																			//goto Óï¾äÌø×ª
 			}
 		}
 	}
-	CLEARBUF											//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Ìí¼Ó 
+	CLEARBUF											//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!æ·»åŠ  
 
-	printf("½«ÔÚÁ½Ãëºó¿ªÊ¼");
-	Sleep(2000); 														//ÊäÈëÄÑ¶ÈÑ¡ÔñºóÔİÍ£2Ãë 
-	system("cls");														//Çå³ı²¿·ÖÄÚÈİ 
-	displayTimeExercise();												//ÖØĞÂ´òÓ¡´°¿ÚĞÅÏ¢ 
+	printf("å°†åœ¨ä¸¤ç§’åå¼€å§‹");
+	Sleep(2000); 														//è¾“å…¥éš¾åº¦é€‰æ‹©åæš‚åœ2ç§’ 
+	system("cls");														//æ¸…é™¤éƒ¨åˆ†å†…å®¹ 
+	displayTimeExercise();												//é‡æ–°æ‰“å°çª—å£ä¿¡æ¯ 
 	printDifficulty(difficulty);
 
 
 
 
-	for (i = 0; i < 10; i++) {															//10´ÎÑ­»·×öÌâ 
+	for (i = 0; i < 10; i++) {															//10æ¬¡å¾ªç¯åšé¢˜ 
 
 
-		srand(time(NULL));				//²úÉúËæ»úÊı»úÖÆ 
-		switch (difficulty) {															//¸ù¾İÓÃ»§ÊäÈëÄÑ¶È£¬³öÌâËæ»úÊıµÄ·¶Î§¸Ä±ä 
+		srand(time(NULL));				//äº§ç”Ÿéšæœºæ•°æœºåˆ¶ 
+		switch (difficulty) {															//æ ¹æ®ç”¨æˆ·è¾“å…¥éš¾åº¦ï¼Œå‡ºé¢˜éšæœºæ•°çš„èŒƒå›´æ”¹å˜ 
 		case 1: num1 = rand() % 10, num2 = rand() % 9 + 1; break;
-		case 2: num1 = rand() % 90 + 10, num2 = rand() % 100 + 1; break;							//·ÀÖ¹³ıÊı£¨num2£©Îª0 
+		case 2: num1 = rand() % 90 + 10, num2 = rand() % 100 + 1; break;							//é˜²æ­¢é™¤æ•°ï¼ˆnum2ï¼‰ä¸º0 
 		case 3: num1 = rand() % 900 + 100, num2 = rand() % 1000 + 1; break;
 
 		default:
 
-			printf("						*ÇëÑ¡ÔñÄÑÒ×³Ì¶È*\n");
-			printf("\n				1------¼òµ¥		2------Ò»°ã		3------À§ÄÑ\n\n\n");
-			printf("ÊäÈëÎŞĞ§ÃüÁî£¡£¡£¡ÇëÖØĞÂÊäÈë\n");
-			goto  begin; 															//ÊäÈëÎŞĞ§Ö¸Áî£¬Ìø×ªÄÑ¶ÈÑ¡Ôñ½çÃæÖØĞÂÊäÈë 
+			printf("						*è¯·é€‰æ‹©éš¾æ˜“ç¨‹åº¦*\n");
+			printf("\n				1------ç®€å•		2------ä¸€èˆ¬		3------å›°éš¾\n\n\n");
+			printf("è¾“å…¥æ— æ•ˆå‘½ä»¤ï¼ï¼ï¼è¯·é‡æ–°è¾“å…¥\n");
+			goto  begin; 															//è¾“å…¥æ— æ•ˆæŒ‡ä»¤ï¼Œè·³è½¬éš¾åº¦é€‰æ‹©ç•Œé¢é‡æ–°è¾“å…¥ 
 
 		}
 
-		kindrandom = rand() % 4 + 1;														//Ëæ»ú²úÉúÌâÄ¿ÀàĞÍ£¨¼Ó¼õ³Ë³ı£© 
+		kindrandom = rand() % 4 + 1;														//éšæœºäº§ç”Ÿé¢˜ç›®ç±»å‹ï¼ˆåŠ å‡ä¹˜é™¤ï¼‰ 
 
-		switch (kindrandom) {								//kindrandom±äÁ¿£º1±í¼Ó·¨£»2±í¼õ·¨£»3±í³Ë·¨£»4 ±í³ı·¨
+		switch (kindrandom) {								//kindrandomå˜é‡ï¼š1è¡¨åŠ æ³•ï¼›2è¡¨å‡æ³•ï¼›3è¡¨ä¹˜æ³•ï¼›4 è¡¨é™¤æ³•
 
 		case 1: kind = '+'; break;
 		case 2: kind = '-'; break;
@@ -609,46 +609,46 @@ begin:																			//goto Óï¾äÌø×ª
 		}
 
 
-		printf("\n\nµÚ%dÌâ£º\n\n", i + 1);
+		printf("\n\nç¬¬%dé¢˜ï¼š\n\n", i + 1);
 		if (kindrandom == 2) {
 			if (num1 >= num2)printf("%d - %d =", num1, num2);
-			else if (num1 < num2)printf("%d - %d =", num2, num1);						//¼õ·¨Ê±·ÀÖ¹´ğ°¸Îª¸ºÊı 
+			else if (num1 < num2)printf("%d - %d =", num2, num1);						//å‡æ³•æ—¶é˜²æ­¢ç­”æ¡ˆä¸ºè´Ÿæ•° 
 		}
 		else printf("%d %c %d =", num1, kind, num2);
 
 		if (kindrandom == 1 || kindrandom == 2 || kindrandom == 3) {
 			scanf("%d", &answer);
 
-			CLEARBUF									//Ìí¼Ó!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Çå¿Õ»º´æÇø 
+			CLEARBUF									//æ·»åŠ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!æ¸…ç©ºç¼“å­˜åŒº 
 
-				if (kindrandom == 1) {															//¼Ó·¨ 
+				if (kindrandom == 1) {															//åŠ æ³• 
 					if (num1 + num2 == answer) {
-						rightcount++;															//¶ÔÌâÊı¼ÓÒ» 
-						printf("¹§Ï²Äã£¬´ğ¶ÔÁË£¡\n");
+						rightcount++;															//å¯¹é¢˜æ•°åŠ ä¸€ 
+						printf("æ­å–œä½ ï¼Œç­”å¯¹äº†ï¼\n");
 					}
 
 					else {
 						wrongcount++;
-						printf("²»¶ÔÅ¶£¡\n");
+						printf("ä¸å¯¹å“¦ï¼\n");
 					}
 
 					Sleep(2000);
-					system("cls");															//Çå³ıÉÏÒ»Ìâ 
+					system("cls");															//æ¸…é™¤ä¸Šä¸€é¢˜ 
 					displayTimeExercise();
 					printDifficulty(difficulty);
 
 				}
-				else if (kindrandom == 2) {    											//¼õ·¨ 
+				else if (kindrandom == 2) {    											//å‡æ³• 
 					if (num1 >= num2) {
 
 						if (num1 - num2 == answer) {
 							rightcount++;
-							printf("¹§Ï²Äã£¬´ğ¶ÔÁË£¡\n");
+							printf("æ­å–œä½ ï¼Œç­”å¯¹äº†ï¼\n");
 						}
 
 						else {
 							wrongcount++;
-							printf("²»¶ÔÅ¶£¡\n");
+							printf("ä¸å¯¹å“¦ï¼\n");
 						}
 						Sleep(2000);
 						system("cls");
@@ -658,12 +658,12 @@ begin:																			//goto Óï¾äÌø×ª
 					else {
 						if (num2 - num1 == answer) {
 							rightcount++;
-							printf("¹§Ï²Äã£¬´ğ¶ÔÁË£¡\n");
+							printf("æ­å–œä½ ï¼Œç­”å¯¹äº†ï¼\n");
 						}
 
 						else {
 							wrongcount++;
-							printf("²»¶ÔÅ¶£¡\n");
+							printf("ä¸å¯¹å“¦ï¼\n");
 						}
 						Sleep(2000);
 						system("cls");
@@ -671,15 +671,15 @@ begin:																			//goto Óï¾äÌø×ª
 						printDifficulty(difficulty);
 					}
 				}
-				else if (kindrandom == 3) {												//³Ë·¨ 
+				else if (kindrandom == 3) {												//ä¹˜æ³• 
 					if (num1*num2 == answer) {
 						rightcount++;
-						printf("¹§Ï²Äã£¬´ğ¶ÔÁË£¡\n");
+						printf("æ­å–œä½ ï¼Œç­”å¯¹äº†ï¼\n");
 					}
 
 					else {
 						wrongcount++;
-						printf("²»¶ÔÅ¶£¡\n");
+						printf("ä¸å¯¹å“¦ï¼\n");
 					}
 
 					Sleep(2000);
@@ -689,24 +689,24 @@ begin:																			//goto Óï¾äÌø×ª
 
 				}
 		}
-		else if (kindrandom == 4) {												//³ı·¨ 
+		else if (kindrandom == 4) {												//é™¤æ³• 
 
 
-			printf("£¨ÉÌ£©£º");
+			printf("ï¼ˆå•†ï¼‰ï¼š");
 			scanf("%d", &shang);
-			if (num1 / num2 == shang)printf("¹§Ï²Äã£¬´ğ¶ÔÁË£¡\n");					//ËãÉÌ 
+			if (num1 / num2 == shang)printf("æ­å–œä½ ï¼Œç­”å¯¹äº†ï¼\n");					//ç®—å•† 
 
 
-			else printf("²»¶ÔÅ¶£¡\n");
+			else printf("ä¸å¯¹å“¦ï¼\n");
 
-			CLEARBUF									//£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡£¡Çå¿Õ»º´æÇø 
-				printf(" ......(ÓàÊı)£º");
+			CLEARBUF									//ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼æ¸…ç©ºç¼“å­˜åŒº 
+				printf(" ......(ä½™æ•°)ï¼š");
 			scanf("%d", &yushu);
 
-			if (num1%num2 == yushu)printf("¹§Ï²Äã£¬´ğ¶ÔÁË£¡\n");				//ËãÓàÊı 
+			if (num1%num2 == yushu)printf("æ­å–œä½ ï¼Œç­”å¯¹äº†ï¼\n");				//ç®—ä½™æ•° 
 
-			else printf("²»¶ÔÅ¶£¡\n");
-			CLEARBUF														//Çå¿Õ»º´æÇø 
+			else printf("ä¸å¯¹å“¦ï¼\n");
+			CLEARBUF														//æ¸…ç©ºç¼“å­˜åŒº 
 
 				if (num1 / num2 != shang || num1 % num2 != yushu) wrongcount++;
 				else rightcount++;
@@ -718,7 +718,7 @@ begin:																			//goto Óï¾äÌø×ª
 		}
 		printf("\n\n");
 	}
-	printf("ÄãÒÑÍê³É´Ë´Î¼ÆÊ±Á·Ï°£¬¹²´ğ¶Ô%dµÀ£¬´ğ´í%dµÀ\nÔÙ½ÓÔÙÀ÷£¡\n", rightcount, wrongcount);
+	printf("ä½ å·²å®Œæˆæ­¤æ¬¡è®¡æ—¶ç»ƒä¹ ï¼Œå…±ç­”å¯¹%dé“ï¼Œç­”é”™%dé“\nå†æ¥å†å‰ï¼\n", rightcount, wrongcount);
 }
 
 void breakThrough() {					//feng
@@ -735,21 +735,21 @@ void breakThrough() {					//feng
 	DWORD mode;
 
 	srand((unsigned)time(NULL));
-	printf("Ğ¡ÅóÓÑ£¬»¶Ó­À´µ½´³¹ØÄ£Ê½£¬");
-	printf("ÉÏÒ»´ÎÄã´³µ½µÄ¹Ø¿¨ÊıÊÇµÚ%d¹Ø\n", user_read.record.level);
-	printf("×¼±¸ºÃÁË£¬ÓÎÏ·ÈıÃëÖÓºó¿ªÊ¼£¡\n");
+	printf("å°æœ‹å‹ï¼Œæ¬¢è¿æ¥åˆ°é—¯å…³æ¨¡å¼ï¼Œ");
+	printf("ä¸Šä¸€æ¬¡ä½ é—¯åˆ°çš„å…³å¡æ•°æ˜¯ç¬¬%då…³\n", user_read.record.level);
+	printf("å‡†å¤‡å¥½äº†ï¼Œæ¸¸æˆä¸‰ç§’é’Ÿåå¼€å§‹ï¼\n");
 	Sleep(3000);
 	system("cls");
-	if (user_read.record.level == 1) {  //µÚÒ»¹Ø 
-		printf("\n»¶Ó­À´µ½µÚÒ»¹Ø£¡\n");
+	if (user_read.record.level == 1) {  //ç¬¬ä¸€å…³ 
+		printf("\næ¬¢è¿æ¥åˆ°ç¬¬ä¸€å…³ï¼\n");
 		for (i = 0; i < 7; i++) {
 			right = 0;
-			num1 = rand() % 10 + 1;    //Éú³ÉËæ»úÊı 
+			num1 = rand() % 10 + 1;    //ç”Ÿæˆéšæœºæ•° 
 			num2 = rand() % 10 + 1;
 			if (num1 < num2) { temp = num1; num1 = num2; num2 = temp; }
-			srand((unsigned)time(NULL)); //Éú³ÉËæ»úÊı--¡·¹¹³É¼ÆËãÌâÖÖÀà 
+			srand((unsigned)time(NULL)); //ç”Ÿæˆéšæœºæ•°--ã€‹æ„æˆè®¡ç®—é¢˜ç§ç±» 
 			kind = rand() % 4 + 1;
-			switch (kind) {                                                         //´æÖüÌâÄ¿ÀúÊ·                      //Èç¹û´íÎó right±äÎª1 
+			switch (kind) {                                                         //å­˜è´®é¢˜ç›®å†å²                      //å¦‚æœé”™è¯¯ rightå˜ä¸º1 
 			case 1:printf("%d + %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1 + num2) == answer, kind, num1, num2); 
 				if ((num1 + num2) != answer) right = 1;  break;
@@ -761,10 +761,10 @@ void breakThrough() {					//feng
 				recording((num1 / num2) == answer && num1%num2 == rest, kind, num1, num2);
 				if ((num1 / num2) != answer || num1 % num2 != rest) right = 1; break;
 			}
-			if (right == 1) {  //´íÎóµÄ´¦Àí°ì·¨ 
+			if (right == 1) {  //é”™è¯¯çš„å¤„ç†åŠæ³• 
 				system("cls");
-				printf("´³¹ØÊ§°Ü£¡Ğ¡ÅóÓÑ£¬ÄãÒª´ÓÕâ¹Ø¿ªÊ¼ÖØĞÂÌôÕ½Âğ£¿\n\n");
-				printf("<ÊÇ>                                   <·ñ>\n");
+				printf("é—¯å…³å¤±è´¥ï¼å°æœ‹å‹ï¼Œä½ è¦ä»è¿™å…³å¼€å§‹é‡æ–°æŒ‘æˆ˜å—ï¼Ÿ\n\n");
+				printf("<æ˜¯>                                   <å¦>\n");
 
 				for (;;) {
 					GetConsoleMode(hStdIn, &mode);
@@ -788,11 +788,11 @@ void breakThrough() {					//feng
 					}
 				}
 
-				if (option == 0) { system("cls"); break; }   // Èç¹ûÑ¡Ôñ0£»break 
-				else if (option == 1) { i = 0; system("pause"); system("cls"); } //Èç¹ûÑ¡Ôñ1£»ÖØÖÃi ºÍ right£» 
+				if (option == 0) { system("cls"); break; }   // å¦‚æœé€‰æ‹©0ï¼›break 
+				else if (option == 1) { i = 0; system("pause"); system("cls"); } //å¦‚æœé€‰æ‹©1ï¼›é‡ç½®i å’Œ rightï¼› 
 			}
 			else {
-				printf("ÕıÈ·£¡");
+				printf("æ­£ç¡®ï¼");
 				system("pause");
 				system("cls");
 			}
@@ -800,16 +800,16 @@ void breakThrough() {					//feng
 		}
 		if (right == 0) user_read.record.level++;
 	}
-	if (user_read.record.level == 2) {  //µÚ2¹Ø 
-		printf("»¶Ó­À´µ½µÚ¶ş¹Ø£¡\n");
+	if (user_read.record.level == 2) {  //ç¬¬2å…³ 
+		printf("æ¬¢è¿æ¥åˆ°ç¬¬äºŒå…³ï¼\n");
 		for (i = 0; i < 7; i++) {
 			right = 0;
-			num1 = rand() % 101 + 1;    //Éú³ÉËæ»úÊı 
+			num1 = rand() % 101 + 1;    //ç”Ÿæˆéšæœºæ•° 
 			num2 = rand() % 10 + 1;
 			if (num1 < num2) { temp = num1; num1 = num2; num2 = temp; }
-			srand((unsigned)time(NULL)); //Éú³ÉËæ»úÊı--¡·¹¹³É¼ÆËãÌâÖÖÀà 
+			srand((unsigned)time(NULL)); //ç”Ÿæˆéšæœºæ•°--ã€‹æ„æˆè®¡ç®—é¢˜ç§ç±» 
 			kind = rand() % 4 + 1;
-			switch (kind) {                                                         //´æÖüÌâÄ¿ÀúÊ·   //Èç¹û´íÎó right±äÎª1 
+			switch (kind) {                                                         //å­˜è´®é¢˜ç›®å†å²   //å¦‚æœé”™è¯¯ rightå˜ä¸º1 
 			case 1:printf("%d + %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
 				recording((num1 + num2) == answer, kind, num1, num2); if ((num1 + num2) != answer) right = 1;  break;
 			case 2:printf("%d - %d = ?\n", num1, num2); fflush(stdin); scanf("%d", &answer);
@@ -820,10 +820,10 @@ void breakThrough() {					//feng
 				recording((num1 / num2) == answer && num1%num2 == rest, kind, num1, num2);
 				if ((num1 / num2) != answer || num1 % num2 != rest) right = 1; break;
 			}
-			if (right == 1) {  //´íÎóµÄ´¦Àí°ì·¨ 
+			if (right == 1) {  //é”™è¯¯çš„å¤„ç†åŠæ³• 
 				system("cls");
-				printf("´³¹ØÊ§°Ü£¡Ğ¡ÅóÓÑ£¬ÄãÒª´ÓÕâ¹Ø¿ªÊ¼ÖØĞÂÌôÕ½Âğ£¿\n\n");
-				printf("<ÊÇ>                                   <·ñ>\n");
+				printf("é—¯å…³å¤±è´¥ï¼å°æœ‹å‹ï¼Œä½ è¦ä»è¿™å…³å¼€å§‹é‡æ–°æŒ‘æˆ˜å—ï¼Ÿ\n\n");
+				printf("<æ˜¯>                                   <å¦>\n");
 				for (;;) {
 					GetConsoleMode(hStdIn, &mode);
 					mode |= ENABLE_MOUSE_INPUT;
@@ -845,12 +845,12 @@ void breakThrough() {					//feng
 						}
 					}
 				}
-				if (option == 0) { system("cls"); break; }  // Èç¹ûÑ¡Ôñ0£»break 
-				else if (option == 1) { i = 0; system("pause"); system("cls"); } //Èç¹ûÑ¡Ôñ1£»ÖØÖÃi ºÍ right£» 
+				if (option == 0) { system("cls"); break; }  // å¦‚æœé€‰æ‹©0ï¼›break 
+				else if (option == 1) { i = 0; system("pause"); system("cls"); } //å¦‚æœé€‰æ‹©1ï¼›é‡ç½®i å’Œ rightï¼› 
 
 			}
 			else {
-				printf("ÕıÈ·£¡");
+				printf("æ­£ç¡®ï¼");
 				system("pause");
 				system("cls");
 			}
@@ -858,16 +858,16 @@ void breakThrough() {					//feng
 		}
 		if (right == 0) user_read.record.level++;
 	}
-	if (user_read.record.level == 3) {  //µÚ3¹Ø 
-		printf("»¶Ó­À´µ½µÚÈı¹Ø£¡\n");
+	if (user_read.record.level == 3) {  //ç¬¬3å…³ 
+		printf("æ¬¢è¿æ¥åˆ°ç¬¬ä¸‰å…³ï¼\n");
 		for (i = 0; i < 7; i++) {
 			right = 0;
-			num1 = rand() % 101 + 1;    //Éú³ÉËæ»úÊı 
+			num1 = rand() % 101 + 1;    //ç”Ÿæˆéšæœºæ•° 
 			num2 = rand() % 101 + 1;
 			if (num1 < num2) { temp = num1; num1 = num2; num2 = temp; }
-			srand((unsigned)time(NULL)); //Éú³ÉËæ»úÊı--¡·¹¹³É¼ÆËãÌâÖÖÀà 
+			srand((unsigned)time(NULL)); //ç”Ÿæˆéšæœºæ•°--ã€‹æ„æˆè®¡ç®—é¢˜ç§ç±» 
 			kind = rand() % 4 + 1;
-			switch (kind) {                                                         //´æÖüÌâÄ¿ÀúÊ·         //Èç¹û´íÎó right±äÎª1 
+			switch (kind) {                                                         //å­˜è´®é¢˜ç›®å†å²         //å¦‚æœé”™è¯¯ rightå˜ä¸º1 
 			case 1:printf("%d + %d = ?\n", num1, num2); scanf("%d", &answer);
 				recording((num1 + num2) == answer, kind, num1, num2); 
 				if ((num1 + num2) != answer) right = 1;  break;
@@ -881,10 +881,10 @@ void breakThrough() {					//feng
 				recording((num1 / num2) == answer && num1%num2 == rest, kind, num1, num2);
 				if ((num1 / num2) != answer || num1 % num2 != rest) right = 1; break;
 			}
-			if (right == 1) {  //´íÎóµÄ´¦Àí°ì·¨ 
+			if (right == 1) {  //é”™è¯¯çš„å¤„ç†åŠæ³• 
 				system("cls");
-				printf("´³¹ØÊ§°Ü£¡Ğ¡ÅóÓÑ£¬ÄãÒª´ÓÕâ¹Ø¿ªÊ¼ÖØĞÂÌôÕ½Âğ£¿\n\n");
-				printf("<ÊÇ>                                   <·ñ>\n");
+				printf("é—¯å…³å¤±è´¥ï¼å°æœ‹å‹ï¼Œä½ è¦ä»è¿™å…³å¼€å§‹é‡æ–°æŒ‘æˆ˜å—ï¼Ÿ\n\n");
+				printf("<æ˜¯>                                   <å¦>\n");
 
 				for (;;) {
 					GetConsoleMode(hStdIn, &mode);
@@ -908,18 +908,18 @@ void breakThrough() {					//feng
 					}
 				}
 
-				if (option == 0) { system("cls"); break; }   // Èç¹ûÑ¡Ôñ0£»break 
-				else if (option == 1) { i = 0; system("pause"); system("cls"); } //Èç¹ûÑ¡Ôñ1£»ÖØÖÃi ºÍ right£»
+				if (option == 0) { system("cls"); break; }   // å¦‚æœé€‰æ‹©0ï¼›break 
+				else if (option == 1) { i = 0; system("pause"); system("cls"); } //å¦‚æœé€‰æ‹©1ï¼›é‡ç½®i å’Œ rightï¼›
 			}
 			else {
-				printf("ÕıÈ·£¡");
+				printf("æ­£ç¡®ï¼");
 				system("pause");
 				system("cls");
 			}
 
 		}
 		if (right == 0) {
-			printf("Ğ¡ÅóÓÑ£¬ÄãµÄÌôÕ½ÒÑ¾­Íê³É¡£");
+			printf("å°æœ‹å‹ï¼Œä½ çš„æŒ‘æˆ˜å·²ç»å®Œæˆã€‚");
 			system("pause");
 			system("cls");
 		}
@@ -928,21 +928,21 @@ void breakThrough() {					//feng
 
 void watchBank() {						//feng
 	FILE *fp;
-	WrongBank wbank[100] = { NULL,0,0,0 };//ÉùÃ÷¶Á³ö´íÌâ´æ·ÅµÄ½á¹¹Ìå 
-	int i;//±éÀú±äÁ¿ 
-	fp = fopen("´íÌâ¿â.txt", "r"); // ´ò¿ªÎÄ¼ş 
+	WrongBank wbank[100] = { NULL,0,0,0 };//å£°æ˜è¯»å‡ºé”™é¢˜å­˜æ”¾çš„ç»“æ„ä½“ 
+	int i;//éå†å˜é‡ 
+	fp = fopen("é”™é¢˜åº“.txt", "r"); // æ‰“å¼€æ–‡ä»¶ 
 	for (i = 0; !feof(fp); i++) {
-		fread(&wbank[i], sizeof(WrongBank), 1, fp);   //Ò»¸öÒ»¸ö¶Á³ö´íÌâ¼ÇÂ¼½ø½á¹¹ÌåÖĞ£¬Ö±µ½¶ÁÍê 
+		fread(&wbank[i], sizeof(WrongBank), 1, fp);   //ä¸€ä¸ªä¸€ä¸ªè¯»å‡ºé”™é¢˜è®°å½•è¿›ç»“æ„ä½“ä¸­ï¼Œç›´åˆ°è¯»å®Œ 
 	}
-	fclose(fp);//¹Ø±ÕÎÄ¼ş 
-	printf("ÒÔÏÂÊÇÄãÔø×ö´íµÄÌâ£º\n");
+	fclose(fp);//å…³é—­æ–‡ä»¶ 
+	printf("ä»¥ä¸‹æ˜¯ä½ æ›¾åšé”™çš„é¢˜ï¼š\n");
 	for (i = 0; i < 50; i++) {
-		if (strcmp(user_read.name, wbank[i].name) == 0) {   //Èç¹û±éÀúµ½È«¾Ö±äÁ¿ĞÕÃûÓë´íÌâ¼ÇÂ¼ĞÕÃûÒ»ÖÂ   
-			switch (wbank[i].kind) {                          //´òÓ¡ 
+		if (strcmp(user_read.name, wbank[i].name) == 0) {   //å¦‚æœéå†åˆ°å…¨å±€å˜é‡å§“åä¸é”™é¢˜è®°å½•å§“åä¸€è‡´   
+			switch (wbank[i].kind) {                          //æ‰“å° 
 			case 1:printf("%d + %d=%d\n", wbank[i].num1, wbank[i].num2, wbank[i].num1 + wbank[i].num2); break;
 			case 2:printf("%d - %d=%d\n", wbank[i].num1, wbank[i].num2, wbank[i].num1 - wbank[i].num2); break;
 			case 3:printf("%d x %d=%d\n", wbank[i].num1, wbank[i].num2, wbank[i].num1*wbank[i].num2); break;
-			case 4:printf("%d / %d=%d¡¤¡¤¡¤%d\n", wbank[i].num1, wbank[i].num2,
+			case 4:printf("%d / %d=%dÂ·Â·Â·%d\n", wbank[i].num1, wbank[i].num2,
 				wbank[i].num1 / wbank[i].num2, wbank[i].num1%wbank[i].num2); break;
 			}
 		}
@@ -952,81 +952,81 @@ void watchBank() {						//feng
 }
 
 void exerciseYourself() {				//chen
-	int difficulty = 0;					//ÄÑ¶ÈÖµ
+	int difficulty = 0;					//éš¾åº¦å€¼
 	int num1 = 0, num2 = 0;
-	int kind = 0;						//ÌâĞÍ£¬1/2/3/4·Ö±ğ´ú±í¼Ó/¼õ/³Ë/³ı
-	int continueExercising = 1;			//±ê¼ÇÊÇ·ñ¼ÌĞø×öÌâ
-	int answer = 0;						//´æ´¢Ñ§ÉúÊäÈëµÄ´ğ°¸
-	int standardAnswer = 0;				//±ê×¼´ğ°¸
-	int reminder = 0;					//ÈçÎª³ı·¨£¬Ğè¼ÇÂ¼Ñ§Éú¸ø³öµÄÓàÊı
-	char sign;							//ÏÔÊ¾ÔËËã·û
-	int isRight = 0;					//±ê¼ÇÌâÄ¿ÊÇ·ñ×ö¶Ô
-	int temp = 0;						//ÁÙÊ±´æ´¢Êı×Ö
-	int isNumber = 0;					//±ê¼ÇÓÃ»§ÊäÈëµÄÊÇ·ñÎªÊı×Ö
+	int kind = 0;						//é¢˜å‹ï¼Œ1/2/3/4åˆ†åˆ«ä»£è¡¨åŠ /å‡/ä¹˜/é™¤
+	int continueExercising = 1;			//æ ‡è®°æ˜¯å¦ç»§ç»­åšé¢˜
+	int answer = 0;						//å­˜å‚¨å­¦ç”Ÿè¾“å…¥çš„ç­”æ¡ˆ
+	int standardAnswer = 0;				//æ ‡å‡†ç­”æ¡ˆ
+	int reminder = 0;					//å¦‚ä¸ºé™¤æ³•ï¼Œéœ€è®°å½•å­¦ç”Ÿç»™å‡ºçš„ä½™æ•°
+	char sign;							//æ˜¾ç¤ºè¿ç®—ç¬¦
+	int isRight = 0;					//æ ‡è®°é¢˜ç›®æ˜¯å¦åšå¯¹
+	int temp = 0;						//ä¸´æ—¶å­˜å‚¨æ•°å­—
+	int isNumber = 0;					//æ ‡è®°ç”¨æˆ·è¾“å…¥çš„æ˜¯å¦ä¸ºæ•°å­—
 	
 	difficulty = setDifficulty();
 	while (continueExercising) {
-		isNumber = 0;						//½«ÊÇ·ñÊı×ÖÖØĞÂ±ê¼ÇÎª·ñ£¬Ê¹ÄÜ½øÈëÑ­»·
-		isRight = 0;						//½«ÊÇ·ñÕıÈ·ÖØĞÂ±ê¼ÇÎª´íÎó
-		srand(time(NULL));					//Éú³ÉËæ»úÊı
-		num1 = rand() % (int)pow(10, difficulty) + 1;	//È¡Ëæ»úÊı£¨ÄÑ¶È1Îª10ÒÔÄÚ£¬ÄÑ¶È2Îª100ÒÔÄÚ£¬ÄÑ¶È3Îª1000ÒÔÄÚ£©				
+		isNumber = 0;						//å°†æ˜¯å¦æ•°å­—é‡æ–°æ ‡è®°ä¸ºå¦ï¼Œä½¿èƒ½è¿›å…¥å¾ªç¯
+		isRight = 0;						//å°†æ˜¯å¦æ­£ç¡®é‡æ–°æ ‡è®°ä¸ºé”™è¯¯
+		srand(time(NULL));					//ç”Ÿæˆéšæœºæ•°
+		num1 = rand() % (int)pow(10, difficulty) + 1;	//å–éšæœºæ•°ï¼ˆéš¾åº¦1ä¸º10ä»¥å†…ï¼Œéš¾åº¦2ä¸º100ä»¥å†…ï¼Œéš¾åº¦3ä¸º1000ä»¥å†…ï¼‰				
 		num2 = rand() % (int)pow(10, difficulty) + 1;
-		if (kind == 2 && num1 < num2) {					//±ÜÃâ³öÏÖ¸ºÊı½á¹û
+		if (kind == 2 && num1 < num2) {					//é¿å…å‡ºç°è´Ÿæ•°ç»“æœ
 			temp = num1;
 			num1 = num2;
 			num2 = temp;
 		}
-		kind = (rand() % 4) + 1;				//È¡1-4Ö®¼äµÄËæ»úÊı
-		switch (kind) {							//ÉèÖÃÔËËã·û
+		kind = (rand() % 4) + 1;				//å–1-4ä¹‹é—´çš„éšæœºæ•°
+		switch (kind) {							//è®¾ç½®è¿ç®—ç¬¦
 			case 4: sign = '/'; standardAnswer = num1 / num2; break;
 			case 3: sign = '*'; standardAnswer = num1 * num2; break;
 			case 2: sign = '-'; standardAnswer = num1 - num2; break;
 			case 1: sign = '+'; standardAnswer = num1 + num2; break;
 		}
 		while (!isNumber) {
-			printf("ÌâÄ¿£º   %d  %c  %d  =  ?\n", num1, sign, num2);
-			if (kind == 4) {					//Èç¹ûÌâÄ¿Îª³ı·¨
-				printf("ÉÌ£º");
-				fflush(stdin);					//Çå¿Õ»º³åÇø
+			printf("é¢˜ç›®ï¼š   %d  %c  %d  =  ?\n", num1, sign, num2);
+			if (kind == 4) {					//å¦‚æœé¢˜ç›®ä¸ºé™¤æ³•
+				printf("å•†ï¼š");
+				fflush(stdin);					//æ¸…ç©ºç¼“å†²åŒº
 				isNumber = scanf("%d", &answer);
-				getchar();						//Çå³ıÓÃ»§ÊäÈëµÄ»Ø³µ
+				getchar();						//æ¸…é™¤ç”¨æˆ·è¾“å…¥çš„å›è½¦
 				if (!isNumber) {
-					printErrorSituation(3);		//Êä³ö´íÎóĞÅÏ¢£¨ÊäÈë·ÇÊı×Ö£©
+					printErrorSituation(3);		//è¾“å‡ºé”™è¯¯ä¿¡æ¯ï¼ˆè¾“å…¥éæ•°å­—ï¼‰
 					system("pause");
 					system("cls");
 					continue;
 				}
-				printf("ÓàÊı£º");	
+				printf("ä½™æ•°ï¼š");	
 				fflush(stdin);
 				isNumber = scanf("%d", &reminder);
 				getchar();
-				if (answer == standardAnswer && reminder == num1 % num2) {	//ÈôÉÌºÍÓàÊı¾ùÕıÈ·
-					isRight = 1;				//Ôò±ê¼ÇÎªÕıÈ·
+				if (answer == standardAnswer && reminder == num1 % num2) {	//è‹¥å•†å’Œä½™æ•°å‡æ­£ç¡®
+					isRight = 1;				//åˆ™æ ‡è®°ä¸ºæ­£ç¡®
 				}
 			}
 			else {
-				printf("´ğ°¸£º");
+				printf("ç­”æ¡ˆï¼š");
 				fflush(stdin);
 				isNumber = scanf("%d", &answer);	
 				getchar();
-				if (answer == standardAnswer) {			//Èô½á¹ûÓë´ğ°¸ÏàÍ¬
-					isRight = 1;						//Ôò±ê¼ÇÎª×ö¶Ô
+				if (answer == standardAnswer) {			//è‹¥ç»“æœä¸ç­”æ¡ˆç›¸åŒ
+					isRight = 1;						//åˆ™æ ‡è®°ä¸ºåšå¯¹
 				}
 			}
-			if (!isNumber) {				//ÅĞ¶ÏÊÇ·ñÎªÊı×Ö
-				printErrorSituation(3);		//Êä³ö´íÎóĞÅÏ¢£¨ÊäÈë·ÇÊı×Ö£©
+			if (!isNumber) {				//åˆ¤æ–­æ˜¯å¦ä¸ºæ•°å­—
+				printErrorSituation(3);		//è¾“å‡ºé”™è¯¯ä¿¡æ¯ï¼ˆè¾“å…¥éæ•°å­—ï¼‰
 				system("pause");
 				system("cls");
 			}
 		}
 		if (isRight) {
-			printf("»Ø´ğÕıÈ·£¡\n");
+			printf("å›ç­”æ­£ç¡®ï¼\n");
 			system("pause");
 		}
 		else {
-			printf("ºÜÒÅº¶£¬»Ø´ğ´íÎó£¬ÕıÈ·´ğ°¸ÊÇ£º");
+			printf("å¾ˆé—æ†¾ï¼Œå›ç­”é”™è¯¯ï¼Œæ­£ç¡®ç­”æ¡ˆæ˜¯ï¼š");
 			if (kind == 4) {
-				printf("ÉÌ£º%d  ÓàÊı£º%d\n", standardAnswer, (num1%num2));
+				printf("å•†ï¼š%d  ä½™æ•°ï¼š%d\n", standardAnswer, (num1%num2));
 			}
 			else {
 				printf("%d\n", standardAnswer);
@@ -1044,10 +1044,10 @@ void checkInfo() {						//chen
 	DWORD mode;
 	int option = 0;
 	
-	printf("ÇëÑ¡ÔñÄúÒª²é¿´µÄÄÚÈİ\n\n");
-	printf("<1>¹«¸æ\n\n");
-	printf("<2>½ÌÊ¦ÆÀ¼Û\n\n");
-	printf("<3>²é¿´¸öÈË¼ÇÂ¼\n\n");
+	printf("è¯·é€‰æ‹©æ‚¨è¦æŸ¥çœ‹çš„å†…å®¹\n\n");
+	printf("<1>å…¬å‘Š\n\n");
+	printf("<2>æ•™å¸ˆè¯„ä»·\n\n");
+	printf("<3>æŸ¥çœ‹ä¸ªäººè®°å½•\n\n");
 
 	while (!option) {
 		GetConsoleMode(hStdIn, &mode);						
@@ -1081,7 +1081,7 @@ void checkInfo() {						//chen
 }
 
 void checkEvaluation() {					//chen
-	printf("%sÍ¬Ñ§£¬ÀÏÊ¦¶ÔÄãµÄÆÀ¼ÛÊÇ:\n",user_read.name);
+	printf("%såŒå­¦ï¼Œè€å¸ˆå¯¹ä½ çš„è¯„ä»·æ˜¯:\n",user_read.name);
 	printf("%s\n", user_read.record.evaluation);
 	system("pause");
 	system("cls");
@@ -1098,7 +1098,7 @@ void checkAnnouncement() {					//chen
 		printf("\n");
 	}
 	if (find == 0) {
-		printf("µ±Ç°Ã»ÓĞ¹«¸æ¡£\n");
+		printf("å½“å‰æ²¡æœ‰å…¬å‘Šã€‚\n");
 	}
 	system("pause");
 	system("cls");
@@ -1110,7 +1110,7 @@ int setDifficulty() {						//chen
 	DWORD mode;
 	int option = 0;
 	
-	printf("ÇëÑ¡ÔñÄãËùÏëÒªµÄÌâÄ¿ÄÑ¶È£º\n\n");
+	printf("è¯·é€‰æ‹©ä½ æ‰€æƒ³è¦çš„é¢˜ç›®éš¾åº¦ï¼š\n\n");
 	printf("<1>         <2>          <3>\n");
 
 	while (!option) {
@@ -1136,7 +1136,7 @@ int setDifficulty() {						//chen
 			}
 		}
 	}
-	printf("ÄãÑ¡ÔñÁËµÚ%d¼¶µÄÄÑ¶È\n", option);
+	printf("ä½ é€‰æ‹©äº†ç¬¬%dçº§çš„éš¾åº¦\n", option);
 	system("pause");
 	system("cls");
 	return option;
@@ -1148,7 +1148,7 @@ int recording(int isRight, int kind,int num1,int num2) {	//chen
 	DWORD mode;
 	int option = 0;
 	
-	user_read.record.numberOfQuestions++;				//×öÌâÁ¿+1
+	user_read.record.numberOfQuestions++;				//åšé¢˜é‡+1
 	switch (kind) {
 		case 4:user_read.record.numberOfDiv++; break;
 		case 3:user_read.record.numberOfMul++; break;
@@ -1156,7 +1156,7 @@ int recording(int isRight, int kind,int num1,int num2) {	//chen
 		case 1:user_read.record.numberOfAddQuestions++; break;
 	}
 	if (isRight) {
-		user_read.record.numberOfSolvedQuestions++;		//¶ÔÌâÁ¿+1
+		user_read.record.numberOfSolvedQuestions++;		//å¯¹é¢˜é‡+1
 		switch (kind) {
 			case 4:user_read.record.solvedDiv++; break;
 			case 3:user_read.record.solvedMul++; break;
@@ -1167,8 +1167,8 @@ int recording(int isRight, int kind,int num1,int num2) {	//chen
 	}
 	else {
 		system("cls");
-		printf("Òª½«ÕâµÀ´íÌâ´æÈë´íÌâ¿âÂğ£¿\n\n");
-		printf("<ÊÇ>                    <·ñ>");
+		printf("è¦å°†è¿™é“é”™é¢˜å­˜å…¥é”™é¢˜åº“å—ï¼Ÿ\n\n");
+		printf("<æ˜¯>                    <å¦>");
 		for (;;) {
 			GetConsoleMode(hStdIn, &mode);
 			mode |= ENABLE_MOUSE_INPUT;
@@ -1199,25 +1199,25 @@ int recording(int isRight, int kind,int num1,int num2) {	//chen
 
 void enterBank(char name[], int kind, int num1, int num2) {		//feng
 	FILE *fp;
-	WrongBank wbank;   //½«²ÎÊı´æÈë´íÌâ½á¹¹Ìåµ±ÖĞ 
+	WrongBank wbank;   //å°†å‚æ•°å­˜å…¥é”™é¢˜ç»“æ„ä½“å½“ä¸­ 
 	wbank.kind = kind;
 	wbank.num1 = num1;
 	wbank.num2 = num2;
 	strcpy(wbank.name, name);
-	fp = fopen("´íÌâ¿â.txt", "a");    //´ò¿ªÎÄ¼ş 
-	fwrite(&wbank, sizeof(WrongBank), 1, fp);   //Ìí¼Ó¼ÇÂ¼ 
+	fp = fopen("é”™é¢˜åº“.txt", "a");    //æ‰“å¼€æ–‡ä»¶ 
+	fwrite(&wbank, sizeof(WrongBank), 1, fp);   //æ·»åŠ è®°å½• 
 	fclose(fp);   //end 
 }
 
 void save() {					//chen
-	FILE *fp = fopen("data.txt", "rt+");			//´ò¿ª´æ´¢Êı¾İµÄÎÄ±¾£¨ÔÊĞí¶ÁĞ´£©
-	User user;										//ĞÂ½¨Ò»¸ö¾Ö²¿±äÁ¿user£¬ÓÃÒÔ±éÀúÊı¾İÎÄ¼ş
+	FILE *fp = fopen("data.txt", "rt+");			//æ‰“å¼€å­˜å‚¨æ•°æ®çš„æ–‡æœ¬ï¼ˆå…è®¸è¯»å†™ï¼‰
+	User user;										//æ–°å»ºä¸€ä¸ªå±€éƒ¨å˜é‡userï¼Œç”¨ä»¥éå†æ•°æ®æ–‡ä»¶
 	while (fread(&user, sizeof(user), 1, fp)) {
-		if (!strcmp(user.name, user_read.name)) {	//strcmp()·µ»ØÖµÎª0£¬¼´Ãû×Ö¶ÔÓ¦
+		if (!strcmp(user.name, user_read.name)) {	//strcmp()è¿”å›å€¼ä¸º0ï¼Œå³åå­—å¯¹åº”
 			break;
 		}
 	}
-	fseek(fp, -(long)sizeof(User), SEEK_CUR);		//½«Ö¸ÕëfpµÄÎ»ÖÃÉèÖÃµ½µ±Ç°Î»ÖÃµÄÇ°Ò»Ò³£¨¼´¶ÔÓ¦ÓÃ»§Ö®Ç°£©
+	fseek(fp, -(long)sizeof(User), SEEK_CUR);		//å°†æŒ‡é’ˆfpçš„ä½ç½®è®¾ç½®åˆ°å½“å‰ä½ç½®çš„å‰ä¸€é¡µï¼ˆå³å¯¹åº”ç”¨æˆ·ä¹‹å‰ï¼‰
 	fwrite(&user_read, sizeof(User), 1, fp);
 	fclose(fp);
 }
@@ -1228,8 +1228,8 @@ int continueOrNot() {											//chen
 	DWORD mode;
 
 	system("cls");
-	printf("»¹ÏëÒª¼ÌĞø×öÌâÂğ£¿\n\n");
-	printf("<ÊÇ>               <·ñ>\n");
+	printf("è¿˜æƒ³è¦ç»§ç»­åšé¢˜å—ï¼Ÿ\n\n");
+	printf("<æ˜¯>               <å¦>\n");
 	for (;;) {
 		GetConsoleMode(hStdIn, &mode);
 		mode |= ENABLE_MOUSE_INPUT;
@@ -1254,24 +1254,24 @@ int continueOrNot() {											//chen
 }
 
 void checkRecord() {										//chen
-	printf("ÄãµÄ×öÌâ¼ÇÂ¼ÈçÏÂ£º\n");
-	printf("×Ü×öÌâÊı£º%d\n",user_read.record.numberOfQuestions);
-	printf("×ÜÕıÈ·Êı£º%d\n", user_read.record.numberOfSolvedQuestions);
+	printf("ä½ çš„åšé¢˜è®°å½•å¦‚ä¸‹ï¼š\n");
+	printf("æ€»åšé¢˜æ•°ï¼š%d\n",user_read.record.numberOfQuestions);
+	printf("æ€»æ­£ç¡®æ•°ï¼š%d\n", user_read.record.numberOfSolvedQuestions);
 	if (user_read.record.numberOfSolvedQuestions == 0) {
-		printf("×ÜÕıÈ·ÂÊ0.00%%\n");
+		printf("æ€»æ­£ç¡®ç‡0.00%%\n");
 	}
 	else {
-		printf("×ÜÕıÈ·ÂÊ£º%.2lf%%\n",
+		printf("æ€»æ­£ç¡®ç‡ï¼š%.2lf%%\n",
 			user_read.record.numberOfSolvedQuestions *100.0 / user_read.record.numberOfQuestions);
 	}
-	printf("¼Ó·¨×öÌâÁ¿£º%d\t\t", user_read.record.numberOfAddQuestions);
-	printf("¼Ó·¨ÕıÈ·ÌâÊı£º%d\n", user_read.record.solvedAdd);
-	printf("¼õ·¨×öÌâÁ¿£º%d\t\t", user_read.record.numberOfSub);
-	printf("¼õ·¨ÕıÈ·ÌâÊı£º%d\n", user_read.record.solvedSub);
-	printf("³Ë·¨×öÌâÁ¿£º%d\t\t", user_read.record.numberOfMul);
-	printf("³Ë·¨ÕıÈ·ÌâÊı£º%d\n", user_read.record.solvedMul);
-	printf("³ı·¨×öÌâÁ¿£º%d\t\t", user_read.record.numberOfDiv);
-	printf("³ı·¨ÕıÈ·ÌâÊı£º%d\n", user_read.record.solvedDiv);
+	printf("åŠ æ³•åšé¢˜é‡ï¼š%d\t\t", user_read.record.numberOfAddQuestions);
+	printf("åŠ æ³•æ­£ç¡®é¢˜æ•°ï¼š%d\n", user_read.record.solvedAdd);
+	printf("å‡æ³•åšé¢˜é‡ï¼š%d\t\t", user_read.record.numberOfSub);
+	printf("å‡æ³•æ­£ç¡®é¢˜æ•°ï¼š%d\n", user_read.record.solvedSub);
+	printf("ä¹˜æ³•åšé¢˜é‡ï¼š%d\t\t", user_read.record.numberOfMul);
+	printf("ä¹˜æ³•æ­£ç¡®é¢˜æ•°ï¼š%d\n", user_read.record.solvedMul);
+	printf("é™¤æ³•åšé¢˜é‡ï¼š%d\t\t", user_read.record.numberOfDiv);
+	printf("é™¤æ³•æ­£ç¡®é¢˜æ•°ï¼š%d\n", user_read.record.solvedDiv);
 	system("pause");
 	system("cls");
 }
@@ -1293,47 +1293,47 @@ Node* sort(Node* pHead) {						//chen
 }
 
 int checkRepeat(User newUser) {
-	FILE *fp = fopen("data.txt", "r");								//´ò¿ª´æ´¢Êı¾İµÄÎÄ¼ş
+	FILE *fp = fopen("data.txt", "r");								//æ‰“å¼€å­˜å‚¨æ•°æ®çš„æ–‡ä»¶
 	User user;
 
 	for (;;) {
 		if (fread(&user, sizeof(user), 1, fp)) {
-			if (!strcmp(newUser.account, user.account)) {			//ÈôÒÑ´æÔÚÏàÍ¬ÓÃ»§Ãû
-				return 1;											//·µ»Ø1
+			if (!strcmp(newUser.account, user.account)) {			//è‹¥å·²å­˜åœ¨ç›¸åŒç”¨æˆ·å
+				return 1;											//è¿”å›1
 			}
-			else if (!strcmp(newUser.name, user.name)) {			//ÈôÒÑ´æÔÚÏàÍ¬ĞÕÃû
-				return 2;											//·µ»Ø2
+			else if (!strcmp(newUser.name, user.name)) {			//è‹¥å·²å­˜åœ¨ç›¸åŒå§“å
+				return 2;											//è¿”å›2
 			}
 		}
 		else {
-			return 0;												//·µ»Ø0£¨±íÊ¾ÎŞÖØ¸´£©
+			return 0;												//è¿”å›0ï¼ˆè¡¨ç¤ºæ— é‡å¤ï¼‰
 		}
 	}
 }
 
 void printErrorSituation(int situation) {						//chen
 	switch (situation) {
-		case 5:printf("Éè¶¨µÄÃÜÂë³¤¶È³¬¹ı20¸ö×Ö·û£¬ÇëÖØÊÔ\n"); break;
-		case 4:printf("Éè¶¨µÄÕËºÅ³¤¶È³¬¹ı20¸ö×Ö·û£¬ÇëÖØÊÔ\n"); break;
-		case 3:printf("ÄãÊäÈëµÄ²¢·ÇÊı×Ö£¬ÇëÖØĞÂÊäÈë\n"); break;
-		case 2:printf("ÄãÒÑ¾­ÓµÓĞÒ»¸öÕËºÅÁË£¬Çë²»ÒªÖØ¸´×¢²á\n"); break;
-		case 1:printf("¸ÃÓÃ»§ÃûÒÑ´æÔÚ£¬Çë²»ÒªÖØ¸´×¢²á\n"); break;
+		case 5:printf("è®¾å®šçš„å¯†ç é•¿åº¦è¶…è¿‡20ä¸ªå­—ç¬¦ï¼Œè¯·é‡è¯•\n"); break;
+		case 4:printf("è®¾å®šçš„è´¦å·é•¿åº¦è¶…è¿‡20ä¸ªå­—ç¬¦ï¼Œè¯·é‡è¯•\n"); break;
+		case 3:printf("ä½ è¾“å…¥çš„å¹¶éæ•°å­—ï¼Œè¯·é‡æ–°è¾“å…¥\n"); break;
+		case 2:printf("ä½ å·²ç»æ‹¥æœ‰ä¸€ä¸ªè´¦å·äº†ï¼Œè¯·ä¸è¦é‡å¤æ³¨å†Œ\n"); break;
+		case 1:printf("è¯¥ç”¨æˆ·åå·²å­˜åœ¨ï¼Œè¯·ä¸è¦é‡å¤æ³¨å†Œ\n"); break;
 		default: break;
 	}
 }
 
 void quit() {
-	printf("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡       %%%%%%%%%%%\n");
-	printf("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡   %%%%/\\%%%%/\\%%%%,\n");
-	printf("¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡   %%%%%%%%/c ''J/ %%%%%%%,\n");
-	printf("¡¡ %.¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡     %%%%%%%%/ d¡¡b \\%%%%%%%%% \n");
-	printf("¡¡ `%%.¡¡¡¡¡¡¡¡ _¡¡   %%%%%%%%%%%%%%|¡¡¡¡_¡¡|%%%%%%%%%%%%% \n");
-	printf("¡¡¡¡`%%¡¡¡¡¡¡.-¡¯¡¡`'~-'`%%%%%%%%%%(=_Y_=)%%%%%%%%%%%%%%     ~~~  ÔÙ¼û\n");
-	printf("¡¡¡¡ //¡¡¡¡.¡¯¡¡¡¡ `.¡¡ `%%%%%%%%%%%% \\7/%%%%%%%%%%%____\n");
-	printf("¡¡¡¡ //¡¡¡¡.¡¯¡¡¡¡ `.¡¡¡¡  %%%%%%%%\\7/%%%%%%%%____ \n");
-	printf("¡¡¡¡((¡¡¡¡/¡¡¡¡,¡¡ ;¡¡¡¡¡¡`  %%%%%%%%%%____)))\n");
-	printf("¡¡¡¡`.`--¡¯¡¡,¡¡, ,¡¯¡¡_,`-._%%%%%%%_`-,\n");
-	printf("\n³ÌĞò½«ÔÚ3ÃëºóÍË³ö¡£");
+	printf("ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€       %%%%%%%%%%%\n");
+	printf("ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€   %%%%/\\%%%%/\\%%%%,\n");
+	printf("ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€   %%%%%%%%/c ''J/ %%%%%%%,\n");
+	printf("ã€€ %.ã€€ã€€ã€€ã€€ã€€ã€€ã€€ã€€     %%%%%%%%/ dã€€b \\%%%%%%%%% \n");
+	printf("ã€€ `%%.ã€€ã€€ã€€ã€€ _ã€€   %%%%%%%%%%%%%%|ã€€ã€€_ã€€|%%%%%%%%%%%%% \n");
+	printf("ã€€ã€€`%%ã€€ã€€ã€€.-â€™ã€€`'~-'`%%%%%%%%%%(=_Y_=)%%%%%%%%%%%%%%     ~~~  å†è§\n");
+	printf("ã€€ã€€ //ã€€ã€€.â€™ã€€ã€€ `.ã€€ `%%%%%%%%%%%% \\7/%%%%%%%%%%%____\n");
+	printf("ã€€ã€€ //ã€€ã€€.â€™ã€€ã€€ `.ã€€ã€€  %%%%%%%%\\7/%%%%%%%%____ \n");
+	printf("ã€€ã€€((ã€€ã€€/ã€€ã€€,ã€€ ;ã€€ã€€ã€€`  %%%%%%%%%%____)))\n");
+	printf("ã€€ã€€`.`--â€™ã€€,ã€€, ,â€™ã€€_,`-._%%%%%%%_`-,\n");
+	printf("\nç¨‹åºå°†åœ¨3ç§’åé€€å‡ºã€‚");
 	Sleep(3000);
 }
 
