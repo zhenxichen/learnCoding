@@ -16,10 +16,10 @@ int main() {
 bool paren(const char exp[],int n) {
 	stack<char> s;
 	for (int i = 0; i < n; i++) {
-		if (exp[i] == '(' || '[' || '{') {
+		if (exp[i] == '(' ||exp[i] == '[' ||exp[i] == '{') {
 			s.push(exp[i]);
 		}
-		else if(exp[i] == ')'||']'||'}'){
+		else if(exp[i] == ')'||exp[i] ==']'||exp[i] =='}'){
 			char top = s.top();
 			if (top == '{') {
 				if (exp[i] == '}') { return true; }
