@@ -32,6 +32,11 @@ bool checkInput(const char* string, int len) {
 		system("pause");
 		return false;
 	}
+	if (!checkOpt(string, len)) {
+		cout << "输入表达式格式错误" << endl;
+		system("pause");
+		return false;
+	}
 	return true;
 }
 
@@ -48,6 +53,22 @@ bool checkChar(const char* string, int len) {
 			}
 		}
 		if (!valid) { return false; }
+	}
+	return true;
+}
+
+bool checkOpt(const char* string, int len) {
+	bool isOpt = false;
+	for (int i = 0; i < len; i++) {
+		if (IsOpt(string[i])) {
+			if (isOpt) {							//若上一个字符也为操作符
+				return false;
+			}
+			isOpt = true;
+		}
+		else {
+			isOpt = false;
+		}
 	}
 	return true;
 }
