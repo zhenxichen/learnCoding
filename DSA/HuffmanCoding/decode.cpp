@@ -25,8 +25,14 @@ int* readStat(char* filename) {
 	int sta;			//用以读取频率值
 	int* stat = new int[N_CHAR];		//记录频率的数组
 	FILE* fp = fopen(filename, "r");
+	if (!fp) {
+		printError(2);
+	}
 	while (true) {
 		fscanf(fp, "%c", &c);
+		if (c == EOF) {
+			printError(3);
+		}
 		if (c == '\n') {					
 			break;
 		}

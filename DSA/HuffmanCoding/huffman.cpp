@@ -3,6 +3,15 @@
 void printError(int situ) {
 	if (situ == 1) {
 		cout << "没有与输入对应的操作" << endl;
+		system("pause");
+	}
+	else if (situ == 2) {
+		cout << "找不到该文件" << endl;
+		system("pause");
+	}
+	else if (situ == 3) {
+		cout << "该文件为空文件" << endl;
+		system("pause");
 	}
 	exit(-1);
 }
@@ -23,6 +32,9 @@ int* statistics(char* textFile) {
 	ifstream infile;
 	char ch;
 	infile.open(textFile);
+	if (!infile) {
+		printError(2);
+	}
 	while (infile.get(ch)) {
 		if (ch - 0x20 < N_CHAR) {
 			freq[ch - 0x20]++;
