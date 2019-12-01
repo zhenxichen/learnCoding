@@ -39,15 +39,12 @@ int* readStat(char* filename) {
 	return stat;
 }
 
-void fileDecoding(char* filename, char* targetName, RTable table,int maxLength) {
-	ifstream infile;
+void fileDecoding(char* filename, char* targetName, RTable table, int maxLength) {
 	ofstream outfile;
-	infile.open(filename, ios::in);
-	outfile.open(targetName,ios::out);
+	outfile.open(targetName, ios::out);
 	string data;
+	data = fileReading(filename);
 	string code;
-	getline(infile, data);			//读取之前的统计信息（再此处无效）
-	getline(infile, data);			//读取存储的编码
 	for (size_t len = data.length(), i = 0; i < len; i++) {
 		for (;;) {
 			code += data[i];
@@ -56,10 +53,44 @@ void fileDecoding(char* filename, char* targetName, RTable table,int maxLength) 
 				outfile << c;
 				break;
 			}
+			if (i >= len) {
+				break;
+			}
 			i++;
 		}
 		code.clear();
 	}
-	infile.close();
 	outfile.close();
+}
+
+string fileReading(char* filename) {
+	ifstream infile;
+	infile.open(filename, ios::in);
+	string data;
+	char ch = 0;
+	int length = 0;
+	int count = 0;				//读取的编码数
+	unsigned char and_bit[] = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+	getline(infile, data);
+	infile >> length;			//总编码长度
+	data.clear();
+	while (infile.get(ch)) {
+		for (int i = 0; i < 8; i++) {
+			if (and_bit[i] & ch) {
+				data += "1";
+			}
+			else {
+				data += "0";
+			}
+			count++;
+			if (count == length) {
+				break;
+			}
+		}
+		if (count == length) {
+			break;
+		}
+	}
+	infile.close();
+	return data;
 }
