@@ -36,8 +36,8 @@ int* statistics(char* textFile) {
 		printError(2);
 	}
 	while (infile.get(ch)) {
-		if (ch - 0x20 < N_CHAR) {
-			freq[ch - 0x20]++;
+		if (ch < N_CHAR) {
+			freq[ch]++;
 		}
 	}
 	infile.close();
@@ -46,10 +46,10 @@ int* statistics(char* textFile) {
 
 HuffForest* initForest(int* statistics) {
 	HuffForest* forest = new HuffForest;
-	for (char i = 0; i < N_CHAR; i++) {
+	for (char i = 0; i < N_CHAR - 1; i++) {
 		if (statistics[i] > 0) {				//若该字符的权值大于0
 			forest->push_back(new HuffTree);
-			forest->back()->insertAsRoot(HuffChar(0x20 + i, statistics[i]));
+			forest->back()->insertAsRoot(HuffChar(i, statistics[i]));
 		}
 	}
 	return forest;

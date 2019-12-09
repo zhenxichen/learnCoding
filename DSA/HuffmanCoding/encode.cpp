@@ -24,13 +24,13 @@ bool encode() {
 bool printStat(int* stat, char* targetFile) {
 	ofstream out;
 	out.open(targetFile,ios::out);
-	for (int i = 0x20; i < N_CHAR + 0x20; i++) {
-		if (stat[i - 0x20] > 0) {
+	for (int i = 0; i < N_CHAR ; i++) {
+		if (stat[i] > 0) {
 			out << (char)i;
-			out << stat[i - 0x20];
+			out << stat[i];
 		}
 	}
-	out << endl;				//标记频率表部分结束
+	out << '^';				//标记频率表部分结束
 	out.close();
 	return true;
 }

@@ -33,14 +33,11 @@ int* readStat(char* filename) {
 		if (c == EOF) {
 			printError(3);
 		}
-		if (c == '\n') {					
+		if (c == '^') {					
 			break;
 		}
 		fscanf(fp, "%d", &sta);
-		if (sta == '\n') {
-			break;
-		}
-		stat[c - 0x20] = sta;
+		stat[c] = sta;
 	}
 	return stat;
 }
@@ -74,12 +71,16 @@ string fileReading(char* filename) {
 	infile.open(filename, ios::in);
 	string data;
 	char ch = 0;
+	int inte = 0;
 	int length = 0;
 	int count = 0;				//读取的编码数
 	unsigned char and_bit[] = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
-	getline(infile, data);
+	for (;;) {
+		infile.get(ch);
+		if (ch == '^') { break; }
+		infile >> inte;
+	}
 	infile >> length;			//总编码长度
-	data.clear();
 	while (infile.get(ch)) {
 		for (int i = 0; i < 8; i++) {
 			if (and_bit[i] & ch) {

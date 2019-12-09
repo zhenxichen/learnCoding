@@ -12,7 +12,7 @@
 #include <fstream>
 #include <streambuf>
 
-#define N_CHAR ((0x80)-(0x20))
+#define N_CHAR ((0x80))
 
 #define IsChar(x) ((x) >= 0x20)
 #define HasLChild(x) ((x).lChild)
