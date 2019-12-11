@@ -101,3 +101,5 @@ template <typename Tv, typename Te> void GraphMatrix<Tv, Te>::dijkstra(int s) {
 		s = temp;
 	}
 }
+
+

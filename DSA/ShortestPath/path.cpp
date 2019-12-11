@@ -27,4 +27,50 @@ GraphMatrix<string, string> setMap() {
 	return map;
 }
 
+void findPath(GraphMatrix<string, string> map, int s, int t) {
+	int totalLength = 0;														//总长
+	map.reset();
+	map.priority(s) = 0;
+	for (int i = 0; i < map.n; i++) {
+		map.status(s) = VISITED;
+		if (map.parent(s) != -1) {
+			map.type(map.parent(s), s) = TREE;
+			totalLength += map.weight(map.parent(s), s);
+			cout << map.edge(map.parent(s), s) << "->";
+		}
+		cout << map.vertex(s);
+		if (s == t) {
+			cout << endl;
+			break;																//选出的节点为目标节点则跳出循环
+		}
+		else {
+			cout << "->";
+		}
+		for (int j = map.firstNbr(s); j > -1; j = map.nextNbr(s, j)) {						//遍历所有邻居
+			if (map.status(j) == UNDISCOVERED && 
+				(map.priority(j) > map.priority(s) + map.weight(s, j))) {		//计算优先级
+				map.priority(j) = map.priority(s) + map.weight(s, j);
+				map.parent(j) = s;
+			}
+		}
+		int temp = 0;
+		for (int shortest = INT_MAX, j = 0; j < map.n; j++) {							//选出下一节点
+			if ((map.status(j) == UNDISCOVERED) && (map.priority(j) < shortest)) {
+				shortest = map.priority(j);
+				temp = j;
+			}
+		}
+		s = temp;
+	}
+	cout << "总长为：" << totalLength << endl;
+}
 
+void printPlace() {
+	string place[10] =
+	{ "西园七舍","西南门","南门","青春广场","一教","二基楼B座",
+		"一号运动场","工训中心","灾后重建学院","一基楼" };
+	cout << "以下为校内各个地点的编号";
+	for (int i = 0; i < 10; i++) {
+		cout << "（" << i + 1 << "） " << place[i] << endl;
+	}
+}
