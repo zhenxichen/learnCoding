@@ -1,8 +1,8 @@
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
 
-#include <limits.h>
 #include <vector>
+#define INT_MAX 0x3f3f3f
 
 using namespace std;
 
@@ -26,7 +26,7 @@ public:
 	//边
 	int e;				//边总数
 	virtual bool exists(int, int) = 0;
-	virtual void insert(Te const&, int, int, int) = 0;
+	virtual void insert(Te& const, int, int, int) = 0;
 	virtual Te remove(int, int) = 0;
 	virtual EType& type(int, int) = 0;
 	virtual Te& edge(int, int) = 0;		//获取边的数据
@@ -90,7 +90,7 @@ public:
 	Te & edge(int i, int j) { return E[i][j]->data; }
 	EType & type(int i, int j) { return E[i][j]->type; }
 	int & weight(int i, int j) { return E[i][j]->weight; }
-	void insert(Te const& edge, int w, int i, int j);
+	void insert(Te& const edge, int w, int i, int j);
 	Te remove(int i, int j);
 	//算法
 	void dijkstra(int);

@@ -1,7 +1,8 @@
 #include "path.h"
 
 int main() {
-	GraphMatrix<string, string> map = setMap();
+	GraphMatrix<string, string> map;
+	setMap(map);
 	int begin = 0;
 	int end = 0;
 	printPlace();
@@ -9,6 +10,6 @@ int main() {
 	cin >> begin;
 	cout << "ÇëÊäÈëÖÕµã±àºÅ£º";
 	cin >> end;
-	findPath(map, begin, end);
+	findPath(map, begin-1, end-1);
 	return 0;
 }

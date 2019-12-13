@@ -24,7 +24,7 @@ template <typename Tv, typename Te> bool GraphMatrix<Tv, Te>::exists(int i, int 
 }
 
 template <typename Tv, typename Te> 
-void GraphMatrix<Tv, Te>::insert(Te const& edge, int w, int i, int j) {
+void GraphMatrix<Tv, Te>::insert(Te& const edge, int w, int i, int j) {
 	if (exists(i, j)) { return; }
 	E[i][j] = new Edge<Te>(edge, w);
 	e++;

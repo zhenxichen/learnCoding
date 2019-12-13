@@ -1,8 +1,8 @@
 #include "path.h"
 #include "graph.cpp"
+#include <stack>
 
-GraphMatrix<string, string> setMap() {
-	GraphMatrix<string, string> map;
+void setMap(GraphMatrix<string, string> & map) {
 	string place[10] =
 	{ "西园七舍","西南门","南门","青春广场","一教","二基楼B座",
 		"一号运动场","工训中心","灾后重建学院","一基楼" };		//地点名称
@@ -24,43 +24,57 @@ GraphMatrix<string, string> setMap() {
 		map.insert(pathName[i], pathlen[i], pathV1[i], pathV2[i]);
 		map.insert(pathName[i], pathlen[i], pathV2[i], pathV1[i]);
 	}
-	return map;
 }
 
 void findPath(GraphMatrix<string, string> map, int s, int t) {
-	int totalLength = 0;														//总长
+	/*标记*/
 	map.reset();
 	map.priority(s) = 0;
 	for (int i = 0; i < map.n; i++) {
 		map.status(s) = VISITED;
 		if (map.parent(s) != -1) {
 			map.type(map.parent(s), s) = TREE;
-			totalLength += map.weight(map.parent(s), s);
-			cout << map.edge(map.parent(s), s) << "->";
-		}
-		cout << map.vertex(s);
-		if (s == t) {
-			cout << endl;
-			break;																//选出的节点为目标节点则跳出循环
-		}
-		else {
-			cout << "->";
 		}
 		for (int j = map.firstNbr(s); j > -1; j = map.nextNbr(s, j)) {						//遍历所有邻居
 			if (map.status(j) == UNDISCOVERED && 
-				(map.priority(j) > map.priority(s) + map.weight(s, j))) {		//计算优先级
+				(map.priority(j) > map.priority(s) + map.weight(s, j))) {					//计算优先级
 				map.priority(j) = map.priority(s) + map.weight(s, j);
 				map.parent(j) = s;
 			}
 		}
-		int temp = 0;
-		for (int shortest = INT_MAX, j = 0; j < map.n; j++) {							//选出下一节点
+		for (int shortest = INT_MAX, j = 0; j < map.n; j++) {								//选出下一节点
 			if ((map.status(j) == UNDISCOVERED) && (map.priority(j) < shortest)) {
 				shortest = map.priority(j);
-				temp = j;
+				s = j;
 			}
 		}
-		s = temp;
+	}
+	/*记录路径*/
+	int totalLength = 0;								//总长
+	stack<int> S;										//记录路径的栈
+	int p1 = 0, p2 = 0;									//用以暂存两个点
+	S.push(t);
+	while (map.parent(t) != -1) {						//仍可追溯到上一节点
+		S.push(map.parent(t));
+		t = map.parent(t);
+	}
+	/*输出路径和长度*/
+	p1 = S.top();
+	S.pop();
+	cout << map.vertex(p1) << "->";
+	while (!S.empty()) {
+		p2 = S.top();
+		cout << map.edge(p1, p2) << "->";
+		totalLength += map.weight(p1, p2);
+		cout << map.vertex(p2);
+		if (S.size() > 1) {
+			cout << "->";
+		}
+		else {
+			cout << endl;
+		}
+		p1 = p2;
+		S.pop();
 	}
 	cout << "总长为：" << totalLength << endl;
 }
@@ -69,8 +83,10 @@ void printPlace() {
 	string place[10] =
 	{ "西园七舍","西南门","南门","青春广场","一教","二基楼B座",
 		"一号运动场","工训中心","灾后重建学院","一基楼" };
-	cout << "以下为校内各个地点的编号";
+	cout << "以下为校内各个地点的编号" << endl;
 	for (int i = 0; i < 10; i++) {
 		cout << "（" << i + 1 << "） " << place[i] << endl;
 	}
 }
+
+//问题出在：dijkstra算法选出的点并不一定是与当前s最近的点，也可能是与最初点最近的点
