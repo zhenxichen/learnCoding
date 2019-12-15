@@ -46,3 +46,5 @@ void swap(int &x, int &y) {
 	x = y;
 	y = temp;
 }
+
+//与课件和课本上的中间过程有一定的区别
