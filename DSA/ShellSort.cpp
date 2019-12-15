@@ -28,7 +28,7 @@ void shellSort(int arr[], int n) {
 				if (arr[k] < arr[k - gap]) {
 					int temp = arr[k];					//暂存arr[k]的值，用于插入到正确位置
 					int w;								//提前定义，使w的作用域扩大到k循环
-					for (w = k - gap; w >= 0 && arr[w] > arr[w + gap];
+					for (w = k - gap; w >= 0 && arr[w] > temp;
 						w -= gap) {
 						arr[w + gap] = arr[w];			//向后移，参考插入排序
 					}
