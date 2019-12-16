@@ -5,11 +5,12 @@ int main() {
 	setMap(map);
 	int begin = 0;
 	int end = 0;
+	int inputRes = 0;
 	printPlace();
-	cout << "ÇëÊäÈëÆğµã±àºÅ£º";
-	cin >> begin;
-	cout << "ÇëÊäÈëÖÕµã±àºÅ£º";
-	cin >> end;
-	findPath(map, begin-1, end-1);
+	inputRes = inputNum(begin, end);
+	if (checkInput(begin, end, inputRes)) {
+		findPath(map, begin - 1, end - 1);
+	}
+	system("pause");
 	return 0;
 }

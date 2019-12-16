@@ -89,4 +89,43 @@ void printPlace() {
 	}
 }
 
-//问题出在：dijkstra算法选出的点并不一定是与当前s最近的点，也可能是与最初点最近的点
+bool checkInput(int begin, int end, int res) {
+	if (res == -1) { return false; }
+	if (begin < 1 || begin>10) {
+		cout << "输入的起点编号超出范围" << endl;
+		return false;
+	}
+	if (end < 1 || end>10) {
+		cout << "输入的终点编号超出范围" << endl;
+		return false;
+	}
+	if (begin == end) {
+		cout << "站在原地不动就行啦~" << endl;
+		return false;
+	}
+	return true;
+}
+
+int inputNum(int & begin, int & end) {
+	cout << "请输入起点编号：";
+	cin >> begin;
+	if (cin.fail()) {
+		cout << "输入了非法内容" << endl;
+		return -1;
+	}
+	cin.clear();
+	cin.ignore(INT_MAX, '\n');
+	cout << "请输入终点编号：";
+	cin >> end;
+	if (cin.fail()) {
+		cout << "输入了非法内容" << endl;
+		return -1;
+	}
+	return 0;
+}
+
+/*目前查错方面只支持以下几种情况*/
+//（1）	要求输入数字时输入了字符串
+//（2）	输入的数字超出了1-10的范围
+//（3）	如果输入的是浮点数会被自动认为是整数继续执行程序
+//（4）	如果起点与终点相同会有特定回应
