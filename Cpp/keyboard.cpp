@@ -8,9 +8,11 @@
 using namespace std;
 
 void keyboardEvent1(int n);					//通过keybd_event函数
+void keyboardEvent2(int n);					//补充填写了硬件扫描码
 
 int main() {
-	keyboardEvent1(10000);
+//	keyboardEvent1(10000);
+	keyboardEvent2(10000);
 	return 0;
 }
 
@@ -27,3 +29,23 @@ void keyboardEvent1(int n) {
 		Sleep(500);
 	}
 }
+
+void keyboardEvent2(int n) {
+	for (int i = 0; i < n; i++) {
+		keybd_event('A', 0x1e, 0, 0);
+		Sleep(10);
+		keybd_event('A', 0x9e, KEYEVENTF_KEYUP, 0);
+		Sleep(500);
+		keybd_event('W', 0x11, 0, 0);
+		Sleep(10);
+		keybd_event('W', 0x91, KEYEVENTF_KEYUP, 0);
+		Sleep(500);
+		keybd_event('D', 0x20, 0, 0);
+		Sleep(10);
+		keybd_event('D', 0xa0, KEYEVENTF_KEYUP, 0);
+		Sleep(1000);
+	}
+	//在参数中补充填写了硬件扫描码后，第一轮模拟按键可以生效了（可惜每次都只有第一轮有效
+	//想要有效必须切回控制台再切回去- -
+}
+
