@@ -29,6 +29,7 @@ public class AppWindow extends JFrame implements MenuListener{
         mineArea = new MineArea(9,9,10,gradeOne.getText());
         add(mineArea,BorderLayout.CENTER);
         setBounds(300,100,500,450);
+        setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         validate();
     }
