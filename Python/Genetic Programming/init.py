@@ -11,6 +11,8 @@ terminalSet = [3, 6, 9, 'x']  #删减Terminal Set中的部分数字，稍微提�
 class Individual:
     def __init__(self):
         self.gene = BinTree(' ')  #用二叉树保存公式（中序遍历解析）
+        self.mark = 0
+        self.fitness = 0.0
 
     #Full方法
     def full(self, depth):  #运用full方法填充二叉树
@@ -34,7 +36,7 @@ class Individual:
         else:
             rand = random.randint(-4, 3)
             if rand >= 0:
-                tree.setRootVal(terminalSet[rand])
+                tree.setRootVal(primitiveSet[rand])
                 tree.insertLeft(self.grow(depth - 1))
                 tree.insertRight(self.grow(depth - 1))
             else:
@@ -49,9 +51,9 @@ def initPop(size):
     for i in range(size):
         ind = Individual()
         if random.random() > 0.5:  #0.5的几率采用full方法
-            ind = ind.full(2)
+            ind.gene = ind.full(2)
         else:
-            ind = ind.grow(2)
+            ind.gene = ind.grow(2)
         population.append(ind)
     return population
 
@@ -59,4 +61,4 @@ def initPop(size):
 #目前需要解决的难点：
 # 1. 如何将公式转化为编码或树           （solved）
 # 2. 如何实现交换以及变异操作（对二叉树进行操作）
-# 3. 如何将特定数值代入x中以进行计算拟合程度
+# 3. 如何将特定数值代入x中以进行计算拟合程度    (solved)

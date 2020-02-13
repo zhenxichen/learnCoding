@@ -23,15 +23,14 @@ class BinTree:
         self.root = root
         self.lChild = None
         self.rChild = None
-        self.depth = depth          #当前结点深度
 
     def insertLeft(self, newNode):
         if self.lChild == None:
-            self.lChild = BinTree(newNode, self.getDepth()+1)
+            self.lChild = newNode
 
     def insertRight(self, newNode):
         if self.rChild == None:
-            self.rChild = BinTree(newNode, self.getDepth()+1)
+            self.rChild = newNode
         
 
     def getRightChild(self):
@@ -46,10 +45,11 @@ class BinTree:
     def getRootVal(self):
         return self.root
     
-    def getDepth(self):
-        return self.depth
 
 
 
 #2020/2/12  目标：完成所需的基本数据结构（解析树和栈） (solved)
 #2020/2/12  目标：完成初始化种群相关的函数            (solved)
+#2020/2/13  目标：完成评价函数                       (solved)
+#2020/2/13  目标：修改grow和full方法的bug            (solved)
+#2020/2/13  目前效果：可以输出第一代的数据
