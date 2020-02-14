@@ -51,9 +51,9 @@ def initPop(size):
     for i in range(size):
         ind = Individual()
         if random.random() > 0.5:  #0.5的几率采用full方法
-            ind.gene = ind.full(2)
+            ind.gene = ind.full(4)
         else:
-            ind.gene = ind.grow(2)
+            ind.gene = ind.grow(4)
         population.append(ind)
     return population
 

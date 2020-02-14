@@ -25,12 +25,10 @@ class BinTree:
         self.rChild = None
 
     def insertLeft(self, newNode):
-        if self.lChild == None:
-            self.lChild = newNode
+        self.lChild = newNode
 
     def insertRight(self, newNode):
-        if self.rChild == None:
-            self.rChild = newNode
+        self.rChild = newNode
         
 
     def getRightChild(self):
@@ -53,3 +51,5 @@ class BinTree:
 #2020/2/13  目标：完成评价函数                       (solved)
 #2020/2/13  目标：修改grow和full方法的bug            (solved)
 #2020/2/13  目前效果：可以输出第一代的数据
+#2020/2/14  目标：初步完成mutate方法                 (solved)
+#2020/2/15  目标：初步完成mate方法
