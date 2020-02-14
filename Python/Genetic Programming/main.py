@@ -26,5 +26,4 @@ def main():
                 pop = gen.mate(pop)
             
 
-
 main()
