@@ -41,7 +41,7 @@ class Genetic:
         t2 = ind2.gene
         #*************#
         #两树之间的交叉操作
-        t1,t2 = mateIn(t1, t2)
+        t1, t2 = mateIn(t1, t2)
         #*************#
         ind1.gene = t1
         ind2.gene = t2
@@ -55,7 +55,6 @@ class Genetic:
     def mutate(self, tree, depth):
         #调用方法：ind.gene = genetic.mutate(ind.gene, 4)
         #实现思路：递归，每轮生成随机数来决定访问左子树、右子树或直接操作根结点
-        tree = BinTree()
         if depth == 1:
             rand = random.randint(0, 3)
             tree.setRootVal(terminalSet[rand])
@@ -80,15 +79,12 @@ class Genetic:
         fitness = []  #用于记录每个个体的fitness
         for ind in population:
             se = ((calcu(ind.gene, x) - x**2 + 3 * x - 6)**2 for x in points)
-            ind.fitness = math.fsum(se) / len(points)
+            ind.fitness = math.fsum(se) / len(points)              #用平均方差来表示适应度，即数值越低越适应
             fitness.append(ind.fitness)
-        stand1 = heapq.nlargest(int(len(fitness) / 10), fitness)[-1] 
-        stand2 = heapq.nsmallest(int(len(fitness) / 10), fitness)[-1]
+        stand = heapq.nsmallest(int(len(fitness) / 5), fitness)[-1]
         for ind in population:
-            if ind.fitness < stand2: 
-                ind.mark = 1  #将最优个体标为1，进行copy操作
-            elif ind.fitness > stand1:
-                ind.mark = -1  #将表现最差的个体标为-1，进行delete操作
+            if ind.fitness < stand:
+                ind.mark = 1  #将最优个体标为1，将其保存下来
             else:
                 ind.mark = 0  #其余个体标为0，进行mutate或mate操作
         return population
@@ -101,6 +97,7 @@ class Genetic:
         avg = numpy.mean(fitness)
         best = numpy.min(fitness)
         print(tplt.format(gen, avg, best))
+        return best
 
 
 #计算解析树所代表的式子的值
@@ -131,26 +128,24 @@ def selectTwo(pop):
 
 #mate操作内部调用的递归函数
 def mateIn(tree1, tree2):
-    if tree1 == None or tree2 == None:
-        return tree2, tree1                     #处理tree1或tree2为None的情况，防止AttributeError
-    rand = random.random()
-    if rand <= 0.3:
-        temp = tree1.getLeftChild()
-        tree1.insertLeft(tree2.getLeftChild())
-        tree2.insertLeft(temp)
-    elif rand >= 0.7:
-        temp = tree1.getRightChild()
-        tree1.insertLeft(tree2.getRightChild())
-        tree2.insertRight(temp)
-    elif rand <= 0.5:
-        t1, t2 = mateIn(tree1.getLeftChild(), tree2.getLeftChild())
-        tree1.insertLeft(t1)
-        tree2.insertRight(t2)
-    else:
-        t1, t2 = mateIn(tree1.getRightChild(), tree2.getRightChild())
-        tree1.insertRight(t1)
-        tree2.insertRight(t2)
-    return tree1, tree2
+    lc1 = tree1.getLeftChild()  #需要确保输入的参数不为None
+    lc2 = tree2.getLeftChild()  #由于解析树的特殊结构，只需要考虑左子树即可
+    if lc1 == None or lc2 == None:  #如果没有左子树，则说明是terminal set内容，直接交换返回
+        return tree2, tree1
+    else:  #tree1和tree2均有子树
+        rand = random.random()
+        if rand < 0.4:  #40%的概率操作左子树
+            lc1, lc2 = mateIn(lc1, lc2)
+            tree1.insertLeft(lc1)
+            tree2.insertLeft(lc2)
+            return tree1, tree2
+        elif rand > 0.6:
+            rc1 = tree1.getRightChild()
+            rc2 = tree2.getRightChild()
+            rc1, rc2 = mateIn(rc1, rc2)
+            return tree1, tree2
+        else:
+            return tree2, tree1
 
 
 #Bugs:
