@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Div网页布局</title>
+</head>
+
+<body>
+    <div id="container" style="width: 500px;">
+        <div id="header" style="background-color: burlywood;text-align: center;">
+            每日目标~
+        </div>
+        <div id="left" style="background-color: cornflowerblue;height: 300px;width: 250px;float: left;">
+            <ul>
+                <li>玩游戏</li><br>
+                <li>背单词</li><br>
+                <li>学英语</li><br>
+                <li>写代码</li><br>
+            </ul>
+            <!--HTML中<ul>表示无序列表(unordered list)，而<ol>表示有序列表(ordered list)-->
+        </div>
+        <div id="right" style="background-color: cornflowerblue;height: 300px;width: 250px;float: left;">
+            <form>
+                <input type="checkbox" name="things" value="game">玩游戏<br>
+                <input type="checkbox" name="things" value="word">背单词<br>
+                <input type="checkbox" name="things" value="english">学英语<br>
+                <input type="checkbox" name="things" value="coding">写代码<br>
+            </form>
+        </div>
+        <div id="footer" style="background-color: darkgoldenrod;text-align: center;">
+            <script>
+                document.write("<p>Summer vocation!</p>")
+            </script>
+        </div>
+    </div>
+</body>
+</html>
