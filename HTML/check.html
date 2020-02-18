@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Z.X.Chen">
+        <title>check</title>
+    </head>
+    <body>
+        <h1>输入验证</h1>
+        <p>请输入1到10之间的数字</p>
+        <input id="numb">
+        <button type="button" onclick="check()">提交</button>
+        <p id="func"></p>
+        <script>
+            function check(){
+                var x;
+                x = document.getElementById("numb").value;
+                if(isNaN(x)){
+                    document.getElementById("func").innerHTML = "输入的不是数字"
+                }
+                else if(x<1||x>10){
+                    document.getElementById("func").innerHTML = "数字超出范围"
+                }
+                else{
+                    document.getElementById("func").innerHTML = "输入正确！"
+                }
+            }
+        </script>
+    </body>
+</html>
