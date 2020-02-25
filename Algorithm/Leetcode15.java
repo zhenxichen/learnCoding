@@ -10,6 +10,8 @@ public class Leetcode15 {
      * Note:
      * The solution set must not contain duplicate triplets.*/
     //解题思路：排序+双指针
+    //一轮遍历数组，每轮在数的右边寻找两个数，使得sum==0
+    //注意避免答案出现重复
     Solution s = new Solution();
 }
 
