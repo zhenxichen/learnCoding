@@ -1,0 +1,67 @@
+body{
+    background-color: royalblue;
+}
+
+main{
+    max-width: 32rem;
+    padding: 2rem;
+    margin: auto;
+}
+
+h1{
+    text-align: center;
+    color: rgb(255, 255, 153);
+}
+
+#messageBox{
+    text-align: center;
+    color: rgb(255, 255, 153);
+    border: 2px solid rgb(255, 255, 153);
+    border-radius: 10px;
+}
+
+.square{
+    /*.表示类选择器，#表示ID选择器*/
+    display: inline-block;
+    border-style: solid;
+    width: 10em;
+    height: 75px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    line-height: 75px;
+    color: rgb(255, 255, 153);
+    border-top: 2px solid rgb(255, 255, 153);
+    border-left: 2px solid rgb(255, 255, 153);
+    border-right: 2px solid rgb(255, 255, 153);
+    border-bottom: 2px solid rgb(255, 255, 153);
+}
+
+.controls{
+    text-align: center;
+}
+
+.button{
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: black;
+    background-color: rgb(255, 255, 153);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px grey;
+}
+
+.button:hover{
+    background-color: goldenrod;
+}
+
+.button:active{
+    background-color: goldenrod;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
