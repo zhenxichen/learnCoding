@@ -14,6 +14,8 @@ const menuTemplate = [
             {
                 label: '新建',
                 click: function(){
+                    //debugger;
+                    //console.log(1);
                     mainWindow.webContents.send('action','new')
                 }
             },
@@ -36,7 +38,8 @@ const menuTemplate = [
         submenu: [
             { label:'剪切', role:'cut' },
             { label:'复制', role:'copy'},
-            { label:'粘贴', role:'paste'}
+            { label:'粘贴', role:'paste'},
+            { label:'全选', role:'selectAll'}
         ]
     }
 ];
@@ -55,6 +58,7 @@ function createWindow(){
         }
     });
     mainWindow.loadFile('index.html');
+    //mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);

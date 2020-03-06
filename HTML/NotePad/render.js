@@ -1,12 +1,12 @@
 /* render.js */
 
-const { remote, ipcRender } = require('electron');
+const { remote, ipcRenderer } = require('electron');
 const { Menu, MenuItem } = remote;
 const dialog = remote.dialog;
 
 let textEditor = document.getElementById("textEditor");
 let saved = true;
-let verifyQuit = false;
+let verifyQuit = true;
 let currFile = null;
 
 //动态创建右击菜单
@@ -22,11 +22,11 @@ menu.append(new MenuItem({
 }));
 
 menu.append(new MenuItem({
-    lebel: '粘贴',
+    label: '粘贴',
     role: 'paste'
 }))
 
-menu.append(new MenuItem({ type:'seperator' }));
+menu.append(new MenuItem({ type:'separator' }));
 
 menu.append(new MenuItem({
     label: '全选',
@@ -35,8 +35,8 @@ menu.append(new MenuItem({
 
 textEditor.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-    menu.popup({ textEditor:remote.getCurrentWindow()}, false);
-});
+    menu.popup({ textEditor:remote.getCurrentWindow()});
+},false);
 
 //检查是否对文档进行了修改
 textEditor.oninput = () => {
@@ -47,9 +47,10 @@ textEditor.oninput = () => {
 }
 
 //实现菜单操作
-ipcRender.on('action',(event,arg) => {
+ipcRenderer.on('action',(event,arg) => {
     switch(arg){
         case 'new':{
+            //console.log("here");
             checkSaved();
             if(verifyQuit){
                 initText();
@@ -70,7 +71,7 @@ ipcRender.on('action',(event,arg) => {
         case 'exit':{
             checkSaved();
             if(verifyQuit){
-                ipcRender.sendSync('quit');
+                ipcRenderer.sendSync('quit');
             }
             break;
         }
@@ -81,11 +82,11 @@ function checkSaved(){
     if(saved){ return; }    //若已保存, 则不做提示
     //showMessageBox 返回值为用户选项的index值
     let selection = dialog.showMessageBox(remote.getCurrentWindow(),{
-        type = 'question',
-        buttons = [
+        type: 'question',
+        buttons: [
             '是','否','返回'
         ],
-        message = "您的文档尚未保存，是否进行保存？"
+        message: "您的文档尚未保存，是否进行保存？"
     });
     switch(selection){
         case 0:{
@@ -150,7 +151,7 @@ function openFile(){
     }
 }
 
-/** Render Process中运用了remote, ipcRender等模块, 
+/** Render Process中运用了remote, ipcRenderer等模块, 
  * 文档可见下方链接：
  * https://www.electronjs.org/docs/api/remote
  * https://www.electronjs.org/docs/api/ipc-renderer
@@ -163,4 +164,7 @@ function openFile(){
  * ver 0.1 2020/3/6 18:13 =>
  * 已经可以通过npm start指令工作，且具有基本的复制粘贴等功能，
  * 但保存功能以及右键单击功能暂时无效，有待修复。
+ * ver 1.0 2020/3/6 19:47 =>
+ * 修复了新建、打开、保存文件以及右键单击的功能。
+ * 但退出功能仍存在问题(害算了，这个功能反正本来就不会用到的吧- -，以后要真有缘分再修复啦~)
  */
