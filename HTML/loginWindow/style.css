@@ -1,0 +1,64 @@
+/* style.css */
+
+html, body{
+    margin: 0;
+    padding: 0;
+    border-radius: 4px;
+}
+
+.mainWindow{
+    width: 430px;
+    height: 330px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.mainWindow header{
+    position: absolute;
+    height: 30px;
+    width: 430px;
+    background: transparent; 
+    border-radius: 4px;
+    text-align: left;
+}
+
+.mainWindow header #close{
+    background-color: transparent;
+}
+
+.mainWindow main .background{
+    width: 430px;
+    height: 130px;
+    background: #ff0000;  /* 待修改 */
+    border-radius: 4px;
+}
+
+.mainWindow main .bdy{
+    width: 430px;
+    height: 170px;
+    background: #ffffff; /* 待修改 */
+}
+
+.mainWindow footer{
+    width: 430px;
+    height: 30px;
+    background: #00ff00;    /* 待修改 */
+    position: absolute;
+}
+
+#account{
+    width: 243px;
+    height: 20px;
+    border-bottom: black 1px;
+}
+
+#password{
+    width: 243px;
+    height: 20px;
+    border-bottom: black 1px;
+}
+
+.center{
+    margin: auto;
+    align-self: center;
+}

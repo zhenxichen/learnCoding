@@ -1,0 +1,10 @@
+{
+  "name": "loginwindow",
+  "version": "1.0.0",
+  "description": "A QQ-like login window by Electronjs.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Z.X.Chen"
+}
