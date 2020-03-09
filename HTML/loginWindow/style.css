@@ -19,7 +19,7 @@ html, body{
     width: 430px;
     background: transparent; 
     border-radius: 4px;
-    text-align: left;
+    text-align: right;
 }
 
 .mainWindow header #close{

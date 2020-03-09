@@ -19,7 +19,7 @@ function createWindow(){
         }
     });
     mainWindow.loadFile('index.html');
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 }
 
 Menu.setApplicationMenu(null);
@@ -34,4 +34,4 @@ app.on('active', () => {
 
 ipcMain.on('close', () => {
     app.quit();
-})
+});
