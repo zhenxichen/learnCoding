@@ -1,4 +1,4 @@
-/* style.css */
+/* login.css */
 
 html, body{
     margin: 0;
@@ -61,4 +61,48 @@ html, body{
 .center{
     margin: auto;
     align-self: center;
+}
+
+.form{
+    padding: 10px 90px 0px 90px;
+}
+
+.form .item{
+    height: 40px;
+    position: relative;
+}
+
+.form .item #account_icon{
+    position: absolute;
+    top: 5px;
+}
+
+.form .item #password_icon{
+    position: absolute;
+    top: 5px;
+}
+
+.form .item input{
+    border: none;
+    outline: none;
+    padding-left: 20px;
+    font-size: 16px;
+    width: 230px;
+    height: 30px;
+    border-bottom: 1px solid #ccc;
+}
+
+.login_button{
+    text-align: center;
+}
+
+.login_button button{
+    background-color: lightskyblue;
+    border: none;
+    outline: none;
+    width: 250px;
+    height: 35px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
 }
