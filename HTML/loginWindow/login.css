@@ -46,18 +46,6 @@ html, body{
     position: absolute;
 }
 
-#account{
-    width: 243px;
-    height: 20px;
-    border-bottom: black 1px;
-}
-
-#password{
-    width: 243px;
-    height: 20px;
-    border-bottom: black 1px;
-}
-
 .center{
     margin: auto;
     align-self: center;
@@ -105,4 +93,18 @@ html, body{
     color: white;
     cursor: pointer;
     font-size: 16px;
+}
+
+.messageBar{
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 430px;
+    height: 25px;
+    text-align: center;
+}
+
+.messageBar #message{
+    font-size: 14px;
+    color: red;
 }

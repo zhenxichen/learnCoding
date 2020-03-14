@@ -4,10 +4,10 @@
 
 const { app, BrowserWindow, Menu, ipcMain} = require('electron');
 
-let mainWindow;
+let loginWindow;
 
-function createWindow(){
-    mainWindow = new BrowserWindow({
+function createLoginWindow(){
+    loginWindow = new BrowserWindow({
         width: 430,
         height: 330,
         minimizable: true,
@@ -18,17 +18,17 @@ function createWindow(){
             nodeIntegration: true
         }
     });
-    mainWindow.loadFile('index.html');
-    //mainWindow.webContents.openDevTools();
+    loginWindow.loadFile('index.html');
+    loginWindow.webContents.openDevTools();
 }
 
 Menu.setApplicationMenu(null);
 
-app.whenReady().then(createWindow);
+app.whenReady().then(createLoginWindow);
 
 app.on('active', () => {
     if(BrowserWindow.getAllWindows().length === 0){
-        createWindow();
+        createLoginWindow();
     }
 });
 
