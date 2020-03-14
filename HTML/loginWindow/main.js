@@ -4,7 +4,8 @@
 
 const { app, BrowserWindow, Menu, ipcMain} = require('electron');
 
-let loginWindow;
+let loginWindow;        //登录界面
+let mainWindow;         //登录后显示的用户界面
 
 function createLoginWindow(){
     loginWindow = new BrowserWindow({
@@ -19,7 +20,7 @@ function createLoginWindow(){
         }
     });
     loginWindow.loadFile('index.html');
-    loginWindow.webContents.openDevTools();
+    //loginWindow.webContents.openDevTools();
 }
 
 Menu.setApplicationMenu(null);
@@ -32,6 +33,35 @@ app.on('active', () => {
     }
 });
 
-ipcMain.on('close', () => {
-    app.quit();
+ipcMain.on('loginWin-close', () => {
+    loginWindow.close();
+    if(BrowserWindow.getAllWindows().length === 0){
+        app.quit();
+    }
 });
+
+ipcMain.on('loginWin-min',() => {
+    loginWindow.minimize();
+})
+
+
+function createMainWindow(){
+    mainWindow = new BrowserWindow({
+        width: 1037,
+        height: 690,
+        frame: false,
+        resizable: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    mainWindow.loadFile('mainWin.html');
+    //mainWindow.webContents.openDevTools();
+}
+
+ipcMain.on('login',() => {
+    //登录成功后，关闭登录界面，切换到用户界面
+    loginWindow.hide();
+    createMainWindow();
+    loginWindow.close();    //先创建用户界面再关闭登录界面，防止触发app.quit()
+})
