@@ -56,7 +56,7 @@ function createMainWindow(){
         }
     });
     mainWindow.loadFile('mainWin.html');
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 }
 
 ipcMain.on('login',() => {
@@ -64,4 +64,15 @@ ipcMain.on('login',() => {
     loginWindow.hide();
     createMainWindow();
     loginWindow.close();    //先创建用户界面再关闭登录界面，防止触发app.quit()
+})
+
+ipcMain.on('mainWin-close',() => {
+    mainWindow.close();
+    if(BrowserWindow.getAllWindows().length === 0){
+        app.quit();
+    }
+})
+
+ipcMain.on('mainWin-min',() => {
+    mainWindow.minimize();
 })

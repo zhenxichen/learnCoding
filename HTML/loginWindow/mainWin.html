@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style/mainWin.css">
+</head>
+<body style="-webkit-app-region: drag">
+    <div class="mainWindow">
+        <header>
+            <div class="header-left">
+                <!--后期修改，可放图标之类的东西-->
+            </div>
+            <div class="header-right" style="-webkit-app-region: no-drag">
+                <image src="image/sami-select.svg" width="25" height="25" id="min"></image>
+                <image src="image/close.svg" width="25" height="25" id="close"></image>
+            </div>
+        </header>
+        <main>
+            <div class="bdy">
+                <div class="searchBar">
+                    <image src="image/search.svg" width="25" height="25" id="search_icon"></image>
+                    <input type="text" id="search">
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="src/mainWin.js"></script>
+</body>
 </html>

@@ -1,4 +1,5 @@
 /* login.js */
+// 渲染登录界面
 
 const { ipcRenderer } = require('electron');
 

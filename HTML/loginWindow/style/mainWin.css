@@ -1,0 +1,82 @@
+html, body{
+    margin: 0px;
+    padding: 0px;
+    border-radius: 10px;
+}
+
+.mainWindow{
+    width: 1037px;
+    height: 690px;
+    border-radius: 10px;
+    position: relative;
+}
+
+header{
+    width: 1037px;
+    height: 40px;
+    background: transparent;
+    border-radius: 10px;
+    position: absolute;
+}
+
+header .header-left{
+    /* 暂时不使用的区域，留着后期用来放图标之类的 */
+    width: 500px;
+    height: 40px;
+    border-radius: 10px;
+    background: transparent;
+    position: absolute;
+    text-align: left;
+}
+
+header .header-right{
+    /* 用于放置-,x等操作按钮的地方 */
+    width: 537px;
+    height: 40px;
+    background: transparent;
+    position: absolute;
+    text-align: right;
+    margin-left: 500px;
+}
+
+main{
+    width: 1037px;
+    height: 640px;
+    background: #fff;
+    text-align: center;
+    padding-top: 40px;
+}
+
+.bdy{
+    width: 1037px;
+    height: 600px;
+    background: #fff;
+    text-align: center;
+    vertical-align: middle;
+}
+
+main .bdy .searchBar{
+    width: 582px;
+    height: 44px;
+    margin: 0 auto;
+    border-radius: 24px;
+    border: 1px solid #dfe1e5;
+    text-align: left;
+    padding-bottom: 10px;
+}
+
+#search_icon{
+    margin-left: 15px;
+    padding-top: 10px;
+    padding-right: 8px;
+}
+
+main .bdy .searchBar #search{
+    width: 487px;
+    height: 34px;
+    background-color: transparent;
+    border: none;
+    color: rgba(0, 0, 0, 0.87);
+    outline: none;
+    font-size: 16px;
+}
