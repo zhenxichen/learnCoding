@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mouse Click</title>
+</head>
+<body>
+    <button id="click" onclick="countClick()">点击</button>
+    <p id="times">点击次数：0</p>
+    <script type="text/javascript">
+    //发现自己的鼠标好像双击了，所以写个代码来统计一下鼠标点击次数
+    //来确定是不是真的双击了
+    //看来确实是出现了双击的情况
+    var count = 0;
+    var countClick = function(){
+        count++;
+        var times = document.getElementById("times");
+        times.innerHTML = count;
+    }
+    </script>
+</body>
+</html>
