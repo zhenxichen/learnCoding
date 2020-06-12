@@ -11,7 +11,7 @@ def client():
 	print('输入get 文件名来向网络中的设备搜索文件')
 	print('或输入quit退出')
 	while True:
-		command = input('>>')
+		command = input('>> ')
 		if command == 'quit':
 			#退出程序
 			send_quit()

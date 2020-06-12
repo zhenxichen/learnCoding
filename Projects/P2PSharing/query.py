@@ -33,7 +33,7 @@ def get(filename, filepath, ipaddress, filesize):
 		with open(download_path + filename, 'wb') as file:
 			while True:
 				data = s.recv(65535)
-				print("recv" + str(data))
+				#print("recv" + str(data))
 				if data == b'end':
 					break
 				else:
@@ -76,5 +76,5 @@ def getIP():
 # 1. 如何同时监听和发送信息 => 多线程
 # 2. 监听线程收到ACK之后如何通知发送线程发送get请求？ => 可以将ACK监听放到客户端线程中去
 # 3. 若网络中无该文件，如何判断？ => 超过一定时间未收到ACK，则说明无该文件
-
+# 4. 联机测试中，MSI无法接收到Surface发出的广播，反之则可以 => 发现是防火墙的问题，关掉就好了
 

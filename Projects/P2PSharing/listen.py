@@ -17,6 +17,7 @@ def listen_query():
 		# 持续监听，直到收到quit消息
 		datacode, address = s.recvfrom(65535)
 		data = datacode.decode('utf-8')
+		print("query: " + data)
 		dataarr = data.split(' ')
 		if dataarr[0] == 'query':
 			#continue
@@ -73,6 +74,7 @@ def listen_get():
 		try:
 			command = messages[0]
 			if command == 'get':
+				print('get')
 				filepath = messages[1]
 				with open(filepath, "rb") as file:
 					while True:
