@@ -8,7 +8,7 @@ def query(filename):
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #创建UDP socket (IPv4)
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-	ip = s.getsockname()[0]
+	ip = getIP()
 	ttl = 5
 	message = 'query ' + filename + ' ' \
 		+ ip + ' ' + str(ttl) #发送信息格式为 （query 文件名 IP TTL）
@@ -18,34 +18,48 @@ def query(filename):
 	s.sendto(message.encode('utf-8'), (ipaddress, port))	#发送广播信息
 	s.close()
 
-def get(filename, filepath, ipaddress):
+def get(filename, filepath, ipaddress, filesize):
 	#收到返回的ACK信息后，向第一个传回信息的peer发送get请求
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #创建TCP socket (IPv4)
 	s.bind(('0.0.0.0', 16580))
 	message = 'get ' + filepath
-	port = 16380
-	s.connect((ipaddress, port))	#建立TCP连接
+	port = 16381
+	print(ipaddress)
+	s.connect((ipaddress[0], port))	#建立TCP连接
 	s.send(message.encode('utf-8'))	#发送get请求
 	download_path = os.path.abspath(os.path.dirname(__file__)) + '/download/'
 	try:
+		print(download_path + filename)
 		with open(download_path + filename, 'wb') as file:
 			while True:
 				data = s.recv(65535)
-				if data:
-					file.write(data)
-				else:
+				print("recv" + str(data))
+				if data == b'end':
 					break
+				else:
+					print("write")
+					file.write(data)
 	except:
 		s.close()
-		return('error')
+		print('error')
+		return False
+	print('finish')
 	s.close()
-	return ('success')
+	return True
 
 def send_quit():
 	# 向本机监听线程发送退出信息
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	s.sendto('quit'.encode('utf-8'), ('127.0.0.1', 16380))
 	s.close()
+	s_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	TCP_PORT = 16381
+	s_tcp.connect(('127.0.0.1', TCP_PORT))
+	s_tcp.send('quit'.encode('utf-8'))
+	s_tcp.close()
+
+def getIP():
+	return socket.gethostbyname(socket.gethostname())
 
 
 

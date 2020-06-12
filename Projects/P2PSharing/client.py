@@ -2,36 +2,44 @@ import socket
 
 from query import query
 from query import send_quit
+from query import get
 from listen import listen_ack
 
-class Client:
-	ack_port = 0
-
-	def __init__(self):
-		self.ack_port = 16382
-
-	def run(self):
-		print('--欢迎使用P2P文件分享系统--')
-		print('输入get 文件名来向网络中的设备搜索文件')
-		print('或输入quit退出')
-		while True:
-			command = input('>>')
-			if command == 'quit':
-				#退出程序
-				send_quit()
-				return
-			else:
-				commands = command.split(' ')
-				if commands[0] == 'get':
-					if len(commands) == 1:
-						print('请在get之后输入要搜索的文件名')
-						continue
-					filename = commands[1]
-					query(filename)
-					filepath, address = listen_ack(self.ack_port)
-					
-
-				else:
-					print('指令{}无效'.format(commands[0]))
+def client():
+	ack_port = 16382
+	print('--欢迎使用P2P文件分享系统--')
+	print('输入get 文件名来向网络中的设备搜索文件')
+	print('或输入quit退出')
+	while True:
+		command = input('>>')
+		if command == 'quit':
+			#退出程序
+			send_quit()
+			return
+		else:
+			commands = command.split(' ')
+			if commands[0] == 'get':
+				if len(commands) == 1:
+					print('请在get之后输入要搜索的文件名')
 					continue
+				filename = commands[1]
+				query(filename)
+				ack_res = listen_ack(ack_port)
+				if ack_res == None:
+					# 未搜索到
+					print('未搜索到相应文件')
+					continue
+				filepath = ack_res[0]
+				address = ack_res[1]
+				filesize = ack_res[2]
+				#print(filepath)
+				#print(address)
+				res = get(filename, filepath, address, filesize)
+				if res:
+					print('下载完毕')
+				else:
+					print('下载过程出现问题，请稍后再试')
+			else:
+				print('指令{}无效'.format(commands[0]))
+				continue
 
