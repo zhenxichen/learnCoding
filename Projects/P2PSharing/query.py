@@ -2,6 +2,7 @@
 
 import socket
 import os
+import frozen_dir
 
 def query(filename):
 	#向局域网内广播query请求
@@ -27,7 +28,8 @@ def get(filename, filepath, ipaddress, filesize):
 	#print(ipaddress)
 	s.connect((ipaddress[0], port))	#建立TCP连接
 	s.send(message.encode('utf-8'))	#发送get请求
-	download_path = os.path.abspath(os.path.dirname(__file__)) + '/download/'
+	#download_path = os.path.abspath(os.path.dirname(__file__)) + '/download/'
+	download_path = os.path.abspath(frozen_dir.app_path()) + '/download/'
 	try:
 		#print(download_path + filename)
 		with open(download_path + filename, 'wb') as file:
