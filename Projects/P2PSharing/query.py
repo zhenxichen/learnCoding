@@ -24,12 +24,12 @@ def get(filename, filepath, ipaddress, filesize):
 	s.bind(('0.0.0.0', 16580))
 	message = 'get ' + filepath
 	port = 16381
-	print(ipaddress)
+	#print(ipaddress)
 	s.connect((ipaddress[0], port))	#建立TCP连接
 	s.send(message.encode('utf-8'))	#发送get请求
 	download_path = os.path.abspath(os.path.dirname(__file__)) + '/download/'
 	try:
-		print(download_path + filename)
+		#print(download_path + filename)
 		with open(download_path + filename, 'wb') as file:
 			while True:
 				data = s.recv(65535)
@@ -37,13 +37,13 @@ def get(filename, filepath, ipaddress, filesize):
 				if data == b'end':
 					break
 				else:
-					print("write")
+					#print("write")
 					file.write(data)
 	except:
 		s.close()
 		print('error')
 		return False
-	print('finish')
+	#print('finish')
 	s.close()
 	return True
 

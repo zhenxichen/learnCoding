@@ -7,9 +7,10 @@ from listen import listen_ack
 
 def client():
 	ack_port = 16382
-	print('--欢迎使用P2P文件分享系统--')
+	print('--欢迎使用文件分享系统--')
 	print('输入get 文件名来向网络中的设备搜索文件')
 	print('或输入quit退出')
+	print('注意：当该程序开启时，会向其它peer分享share文件夹中的文件')
 	while True:
 		command = input('>> ')
 		if command == 'quit':

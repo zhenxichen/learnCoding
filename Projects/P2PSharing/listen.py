@@ -17,7 +17,7 @@ def listen_query():
 		# 持续监听，直到收到quit消息
 		datacode, address = s.recvfrom(65535)
 		data = datacode.decode('utf-8')
-		print("query: " + data)
+		#print("query: " + data)
 		dataarr = data.split(' ')
 		if dataarr[0] == 'query':
 			#continue
@@ -67,25 +67,27 @@ def listen_get():
 	s.listen(5)
 
 	while True:
-		client_socket, client_ip = s.accept()
+		client_socket, client_ip = s.accept() #accept后未关闭
 		data = client_socket.recv(65535)
 		message = data.decode('utf-8')
 		messages = message.split(' ')
 		try:
 			command = messages[0]
 			if command == 'get':
-				print('get')
+				#print('get')
 				filepath = messages[1]
 				with open(filepath, "rb") as file:
 					while True:
 						file_data = file.read(65535)
-						print("send" + str(file_data))
+						#print("send" + str(file_data))
 						if file_data:
 							client_socket.send(file_data)
 						else:
 							client_socket.send(b'end')
+							client_socket.close()
 							break
 			elif command == 'quit':
+				s.close()
 				break
 			else:
 				continue
