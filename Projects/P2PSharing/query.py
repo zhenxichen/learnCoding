@@ -3,6 +3,7 @@
 import socket
 import os
 import frozen_dir
+import sys
 
 def query(filename):
 	#向局域网内广播query请求
@@ -32,18 +33,28 @@ def get(filename, filepath, ipaddress, filesize):
 	download_path = os.path.abspath(frozen_dir.app_path()) + '/download/'
 	try:
 		#print(download_path + filename)
+		curr_size = 0
+		print('文件大小共{}bytes'.format(filesize))
 		with open(download_path + filename, 'wb') as file:
 			while True:
 				data = s.recv(65535)
 				#print("recv" + str(data))
-				if data == b'end':
+				if data == b'end' or data == b'':
+					print('')
 					break
 				else:
-					#print("write")
+					#print(data)
+					curr_size += len(data)
 					file.write(data)
-	except:
+					done = int(50*(curr_size/filesize))
+					sys.stdout.write("\r[%s%s]" % ('█' * done, ' ' * (50 - done)))
+					sys.stdout.flush()
+					if curr_size == filesize:
+						print('')
+						break
+	except Exception as e:
 		s.close()
-		print('error')
+		print(e)
 		return False
 	#print('finish')
 	s.close()

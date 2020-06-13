@@ -25,6 +25,7 @@ def client():
 					continue
 				filename = commands[1]
 				query(filename)
+				print('正在搜索{}'.format(filename))
 				ack_res = listen_ack(ack_port)
 				if ack_res == None:
 					# 未搜索到
@@ -32,9 +33,10 @@ def client():
 					continue
 				filepath = ack_res[0]
 				address = ack_res[1]
-				filesize = ack_res[2]
+				filesize = int(ack_res[2])
 				#print(filepath)
 				#print(address)
+				print('开始向{}下载{}'.format(address[0], filename))
 				res = get(filename, filepath, address, filesize)
 				if res:
 					print('下载完毕')
