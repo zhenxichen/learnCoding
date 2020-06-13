@@ -2,6 +2,9 @@
 
 def getIPList():
 	ipList = []
-	for line in open('iplist.txt'):
-		ipList.append(line)
+	try:
+		for line in open(".iplist"):
+			ipList.append(line)
+	except:
+		return []
 	return ipList
