@@ -15,7 +15,9 @@ class NaiveBayes:
 			-1: 0,
 			1: 0
 		}	# 存储记录的出现频率
+		self.count_con_dict = defaultdict(int)
 		self.total_num = 0		# 训练集的总长度
+		self.condition_dict = defaultdict(int)	# 存储条件概率
 
 	def prior_probability(self, Y):
 		num = len(Y)
@@ -32,15 +34,38 @@ class NaiveBayes:
 		self.prior_dict[1] = self.count_dict[1] / float(self.total_num)
 		self.prior_dict[-1] = self.count_dict[-1] / float(self.total_num)	
 
+	def conditional_probaility(self, X, Y):
+		lumbda = 1
+		mi = 2		# 进行二分离散化后的数据集每一列的可能取值均为2种
+		for i in range(X.shape[1]):
+			count_con_dict = defaultdict(int)		# 记录指定条件下特征出现频率
+			v_i = X[:,i]
+			for x, y in zip(v_i, Y):
+				count_con_dict[(x, y)] += 1
+				self.count_con_dict[(x,y)] = count_con_dict[(x,y)]
+			for key, value in self.count_con_dict.items():
+				self.condition_dict[(i, key[0], key[1])] = \
+					(value + lumbda) / float(self.count_dict[key[1]] + lumbda * mi)
+
+	# 根据先前计算的先验概率和条件概率，预测该组输入的结果
+	def predict(self, x_v, y):
+		
+
 
 	def train(self, trainset):
 		X = trainset[:,[0, 1, 2]]
 		Y = trainset[:,3]
 		self.prior_probability(Y)	# 计算先验概率
+		self.conditional_probaility(X, Y) # 计算条件概率
 		
 
 	def test(self, testset):
-		pass
+		X = testset[:,[0, 1, 2]]
+		Y = testset[:, 3]
+		for i in range(len(Y)):
+			x = X[i]
+			y = Y[i]
+
 
 # 以信息增益为标准，计算第一列的阈值
 # 2, 3, 4列本就是二分数据，因此不需要求阈值
