@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from collections import defaultdict
+from math import log2
 
 class NaiveBayes:
 	def __init__(self) -> None:
@@ -92,8 +93,47 @@ class NaiveBayes:
 # 2, 3, 4列本就是二分数据，因此不需要求阈值
 def get_threshold(dataset):
 	col1 = dataset[...,0]
-	return 0.0
+	Y = dataset[:,3]
+	# 第一列实际上是有四种可能的离散值
+	# 因此我们实际上需要考虑的阈值有3种
+	candidate_threshold = [-1.86, -0.922, 0.0215]
+	winner = 0
+	min_entropy = 0.0
+	for i in range(len(candidate_threshold)):
+		threshold = candidate_threshold[i]
+		# 根据阈值将列表分为两份
+		# 计算两侧的信息熵
+		# 信息增益以信息熵的降低为衡量标准
+		# 因此，我们认为两侧信息熵之和最低的分割点信息增益最大
+		# 取其为阈值
+		count_left_true = 0
+		count_left = 0
+		count_right_true = 0
+		count_right = 0
+		for x, y in zip(col1, Y):
+			if x < threshold:
+				count_left += 1
+				if y == 1:
+					count_left_true += 1
+			else:
+				count_right += 1
+				if y == 1:
+					count_right_true += 1
+		pr_true_left = count_left_true / float(count_left)
+		pr_true_right = count_right_true / float(count_right)
+		entropy = entropy(pr_true_left) + entropy(pr_true_right)	# 两侧的信息熵之和
+		if i == 0:
+			min_entropy = entropy
+		else:
+			if entropy < min_entropy:
+				winner = i
+				min_entropy = entropy
+	return candidate_threshold[winner]
 
+# 计算信息熵
+def entropy(pr_true):
+	pr_false = 1 - pr_true
+	return -1.0 * pr_true * log2(pr_true) - pr_false * log2(pr_false)
 
 # 将数据进行离散化
 def discretize(dataset, threshold):
