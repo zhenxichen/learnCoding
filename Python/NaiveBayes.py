@@ -121,13 +121,13 @@ def get_threshold(dataset):
 					count_right_true += 1
 		pr_true_left = count_left_true / float(count_left)
 		pr_true_right = count_right_true / float(count_right)
-		entropy = entropy(pr_true_left) + entropy(pr_true_right)	# 两侧的信息熵之和
+		_entropy = entropy(pr_true_left) + entropy(pr_true_right)	# 两侧的信息熵之和
 		if i == 0:
-			min_entropy = entropy
+			min_entropy = _entropy
 		else:
-			if entropy < min_entropy:
+			if _entropy < min_entropy:
 				winner = i
-				min_entropy = entropy
+				min_entropy = _entropy
 	return candidate_threshold[winner]
 
 # 计算信息熵
