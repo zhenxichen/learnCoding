@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from collections import defaultdict
 
 class NaiveBayes:
 	def __init__(self) -> None:
@@ -21,7 +22,7 @@ class NaiveBayes:
 
 	def prior_probability(self, Y):
 		num = len(Y)
-		print(Y)
+		# print(Y)
 		self.total_num += num
 		count_dict = {
 			-1: 0,
@@ -48,7 +49,19 @@ class NaiveBayes:
 					(value + lumbda) / float(self.count_dict[key[1]] + lumbda * mi)
 
 	# 根据先前计算的先验概率和条件概率，预测该组输入的结果
-	def predict(self, x_v, y):
+	def predict(self, x):
+		prop_t = self.prior_dict[1]
+		prop_f = self.prior_dict[-1]
+		for j in range(len(x)):
+			prop_t *= self.condition_dict[(j, x[j], 1)]
+			prop_f *= self.condition_dict[(j, x[j], -1)]
+		# 将两概率之和变为1
+		prop_t_1 = prop_t * 1 / float(prop_t + prop_f)
+		prop_f_1 = prop_f * 1 / float(prop_t + prop_f)
+		print("{}\t\t{}\t{}".format(x, prop_t_1, prop_f_1))
+		if prop_t > prop_f:
+			return 1
+		return -1
 		
 
 
@@ -62,9 +75,17 @@ class NaiveBayes:
 	def test(self, testset):
 		X = testset[:,[0, 1, 2]]
 		Y = testset[:, 3]
+		true_count = 0
+		total_count = 0
 		for i in range(len(Y)):
 			x = X[i]
 			y = Y[i]
+			predict = self.predict(x)
+			if predict == y:
+				true_count += 1
+			total_count += 1
+		return true_count / float(total_count)
+
 
 
 # 以信息增益为标准，计算第一列的阈值
@@ -108,6 +129,7 @@ def main():
 	nbc = NaiveBayes()
 	nbc.train(train_set)
 	accuracy = nbc.test(test_set)
+	print('准确率：', accuracy)
 
 	
 
