@@ -10,6 +10,7 @@ public class LeetCode98 {
      */
     public static void main(String[] args) {
         Solution1 solution1 = new Solution1();
+        Solution2 solution2 = new Solution2();
         Solution solution = new Solution();
     }
 }
@@ -44,8 +45,8 @@ class Solution1 {
     }
 }
 
-// 解法2：迭代DFS（中序遍历）
-class Solution {
+// 解法2：迭代中序遍历
+class Solution2 {
     public boolean isValidBST(TreeNode root) {
         // BST的中序遍历应该是升序的
         double last = -Double.MAX_VALUE;    // 用Integer会导致输入为Integer.MIN_VALUE时出错
@@ -62,6 +63,27 @@ class Solution {
             }
             last = node.val;
             node = node.right;
+        }
+        return true;
+    }
+}
+
+// 解法3：递归中序遍历
+class Solution {
+    long last = Long.MIN_VALUE;
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) {  // 递归基
+            return true;
+        }
+        if(!isValidBST(root.left)){
+            return false;
+        }
+        if(root.val <= last) {
+            return false;
+        }
+        last = root.val;
+        if(!isValidBST(root.right)){
+            return false;
         }
         return true;
     }
