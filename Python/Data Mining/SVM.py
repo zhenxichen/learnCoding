@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import KFold
-from math import exp
+
+from sklearn.utils import shuffle
 
 # SMO中使用的部分公式可见：https://www.cnblogs.com/lengyue365/p/5043592.html
 
@@ -20,13 +21,18 @@ class SVM:
 		self.m = 0		# 当前数据集行数
 		self.toler = 0.0001
 		self.Es = []	# 缓存计算出的Ek
+		self.K = []		# 缓存核函数计算结果
 
 
 	def train(self, X, Y):
-		self.X = X
-		self.Y = Y
+		self.X = np.mat(X)
+		self.Y = np.mat(Y).reshape(-1, 1)
+	
 		self.m = X.shape[0]
 		self.Es = np.mat(np.zeros((self.m, 2)))
+		self.K = np.mat(np.zeros((self.m, self.m)))
+		for i in range(self.m):
+			self.K[:,i] = kernel(self.X, self.X[i,:], 'rbf', 0.1)
 		self.smo()		# 用SMO快速计算b和α
 		self.weight()
 
@@ -57,44 +63,44 @@ class SVM:
 
 	# 计算Ek的值
 	def calculate_Ek(self, k):
-		gxk = float(np.multiply(self.alphas, self.Y).transpose()*\
-			kernal(self.X, self.X[k,:])) + self.b
-		Ek = gxk - float(self.Y[k])
+		Y = self.Y
+		gxk = np.float(np.multiply(self.alphas, Y).T * self.K[:,k]) + self.b
+		Ek = gxk - np.float(Y[k])
 		return Ek
 
 	# 更新Ek的值
 	def update_Ek(self, k):
 		Ek = self.calculate_Ek(k)
-		self.Es = [1, Ek]
+		self.Es[k] = [1, Ek]
 
 	# 已知i，启发式选择j
 	def select_j(self, i, Ei):
-		selected_j = -1
+		j = -1
 		max_delta_E = 0
-		final_Ej = 0
+		Ej = 0
 		self.Es[i] = [1, Ei]
 		validList = np.nonzero(self.Es[:,0].A)[0]
 		if len(validList) > 1:
-			for j in validList:
-				if j == i:
+			for k in validList:
+				if k == i:
 					continue
-				Ej = self.calculate_Ek(j)
-				delta_E = abs(Ej - Ei)
+				Ek = self.calculate_Ek(k)
+				delta_E = abs(Ek - Ei)
 				if delta_E > max_delta_E:
 					max_delta_E = delta_E
-					selected_j = j
-					final_Ej = Ej
+					j = k
+					Ej = Ek
 		else:		# 只有i可用（第一次循环）
-			selected_j = random_select_j(i, self.m)
-			final_Ej = self.calculate_Ek(j)
-		return selected_j, final_Ej
+			j = random_select_j(i, self.m)
+			Ej = self.calculate_Ek(j)
+		return j, Ej
 	
 	# 内循环
 	def inner_loop(self, i):
 		Ei = self.calculate_Ek(i)
 		# 判断Ei是否违反KKT超过toler
-		if (self.Y[i]*Ei < -self.toler and self.alphas[i] < self.C) or \
-			(self.Y[i]*Ei > self.toler and self.alphas[i] > 0):
+		if ((self.Y[i]*Ei < -self.toler) and (self.alphas[i] < self.C)) or \
+			((self.Y[i]*Ei > self.toler) and (self.alphas[i] > 0)):
 			# 根据启发式选择选择j
 			j, Ej = self.select_j(i, Ei)
 			# 保存原来的αi和αj
@@ -111,12 +117,11 @@ class SVM:
 			if L == H:
 				return 0		# 返回，继续遍历下一个αi
 			# 计算η
-			eta = self.X[i,:] * self.X[i,:].transpose() + \
-				self.X[j,:] * self.X[j, :].transpose() - \
-					2 * self.X[i,:] * self.X[j, :].transpose()
+			eta = 2 * self.K[i, j] - self.K[i, i] - self.K[j, j]
 			if eta == 0:
 				return 0
 			# 更新αj
+			print(np.shape())
 			alpha_j = self.alphas[j] + self.Y[j] * (Ei - Ej) / eta
 			alpha_j = clip_alpha(alpha_j, L, H)
 			self.alphas[j] = alpha_j
@@ -131,11 +136,9 @@ class SVM:
 			self.update_Ek(i)
 			# 分别计算b1和b2
 			b1 = self.b - Ei - self.Y[i] * (alpha_i - ai_old) * \
-				self.X[i,:] * self.X[i,:].transpose() - self.Y[j] * \
-					(alpha_j - aj_old) * self.X[j,:] * self.X[j,:].transpose()
+				self.K[i, i] - self.Y[j] * (alpha_j - aj_old) * self.K[j, j]
 			b2 = self.b - Ej - self.Y[i] * (alpha_i - ai_old) * \
-				self.X[i,:] * self.X[j,:].transpose() - self.Y[j] * \
-					(alpha_j - aj_old) * self.X[j,:] * self.X[j,:].transpose()
+				self.K[i, j] - self.Y[j] * (alpha_j - aj_old) * self.K[j, j]
 			# 选择b
 			if alpha_i > 0 and alpha_i < C:
 				self.b = b1
@@ -154,10 +157,35 @@ class SVM:
 		m = self.m
 		for i in range(m):
 			if self.alphas[i] > 0:
+				print(self.Y[i])
+				print(self.alphas[i])
+				print(self.X[i,:])
 				w += self.Y[i] * self.alphas[i] * self.X[i,:]
-		self.w = w.tolist()
+		self.w = w
 
+	def predict(self, x):
+		p = (x * self.w.T) + self.b
+		if p > 0:
+			return 1
+		else:
+			return -1
 
+	def test(self, X, Y):
+		TP = 0; FP = 0; FN = 0; TN = 0
+		for i in range(len(Y)):
+			x = X[i]
+			y = Y[i]
+			predict = self.predict(x)
+			if predict == 1 and y == 1:
+				TP += 1
+			elif predict == 1 and y == -1:
+				FP += 1
+			elif predict == -1 and y == 1:
+				FN += 1
+			else:
+				TN += 1
+		return TP, FP, FN, TN	
+		
 
 
 # 根据i随机选择j
@@ -175,14 +203,14 @@ def clip_alpha(alpha_j, L, H):
 		alpha_j = H
 	return alpha_j
 
-def kernal(X, Z, mode= 'rbf', sigma= 0.1):
+def kernel(X, Z, mode= 'rbf', sigma= 0.1):
 	m, n = np.shape(X)
-	K = np.mat(np.zeros((m, 1))
+	K = np.mat(np.zeros((m, 1)))
 	if mode == 'rbf':
 		for j in range(m):
 			delta = X[j,:] - Z
 			K[j] = delta * delta.T
-		K = exp(-K**2/2*sigma)
+		K = np.exp(K/(-1*sigma**2))
 	else:
 		K = X * Z.T
 	return K
@@ -191,10 +219,23 @@ def read_data():
 	filepath = 'D:\\learnCoding\\Python\\Data Mining\\heart_failure_clinical_records_dataset.csv'
 	df = pd.read_csv(filepath)
 	dataset = np.array(df)
-	return dataset
+	X = dataset[:,0:-1]
+	Y = dataset[:,-1]
+	return X, Y
 
 def main():
-	read_data()
+	dataset_X, dataset_Y = read_data()
+	kf = KFold(n_splits= 10, shuffle= True)
+	svm = SVM(C=200)
+	count = np.array([0, 0, 0, 0])
+	for train_index, test_index in kf.split(dataset_X):
+		train_X, test_X = dataset_X[train_index], dataset_X[test_index]
+		train_Y, test_Y = dataset_Y[train_index], dataset_Y[test_index]
+
+		svm.train(train_X, train_Y)
+		tp, fp, fn, tn = svm.test(test_X, test_Y)
+		print(tp, fp, fn, tn)
+
 
 if __name__ == "__main__":
 	main()
