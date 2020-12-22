@@ -26,13 +26,13 @@ class SVM:
 
 	def train(self, X, Y):
 		self.X = np.mat(X)
-		self.Y = np.mat(Y).reshape(-1, 1)
-	
+		self.Y = np.array(Y).flatten()
+		self.Y[self.Y == 0] = -1
 		self.m = X.shape[0]
-		self.Es = np.mat(np.zeros((self.m, 2)))
+		self.Es = np.zeros(self.m)
 		self.K = np.mat(np.zeros((self.m, self.m)))
 		for i in range(self.m):
-			self.K[:,i] = kernel(self.X, self.X[i,:], 'rbf', 0.1)
+			self.K[:,i] = kernel(self.X, self.X[i,:], 'lin', 1.3)
 		self.smo()		# 用SMO快速计算b和α
 		self.weight()
 
@@ -41,11 +41,12 @@ class SVM:
 		# 否则，选择两个α，固定其他变量，针对这两个变量构建一个
 		# 两个变量，一个是违反KKT最严重的那个，另一个由约束条件自动确定
 		self.b = 0
-		self.alphas = np.mat(np.zeros((self.m, 1)))
+		self.alphas = np.zeros(self.m)
 		i = 0
 		maxIter = 200	# 最大迭代次数
 		entireSet = True		# 标记本轮是否进行全集遍历
 		alphaPairsChanged = 0
+		self.update_Es()
 
 		while i < maxIter and (entireSet or alphaPairsChanged > 0):
 			alphaPairsChanged = 0 # 记录每一轮遍历修改的α对数
@@ -64,33 +65,31 @@ class SVM:
 	# 计算Ek的值
 	def calculate_Ek(self, k):
 		Y = self.Y
-		gxk = np.float(np.multiply(self.alphas, Y).T * self.K[:,k]) + self.b
+		gxk = np.float(np.multiply(self.alphas, Y) * self.K[:,k]) + self.b
 		Ek = gxk - np.float(Y[k])
 		return Ek
 
 	# 更新Ek的值
 	def update_Ek(self, k):
 		Ek = self.calculate_Ek(k)
-		self.Es[k] = [1, Ek]
+		self.Es[k] = Ek
+	
+	def update_Es(self):
+		for i in range(self.m):
+			self.update_Ek(i)
 
 	# 已知i，启发式选择j
 	def select_j(self, i, Ei):
 		j = -1
 		max_delta_E = 0
 		Ej = 0
-		self.Es[i] = [1, Ei]
-		validList = np.nonzero(self.Es[:,0].A)[0]
-		if len(validList) > 1:
-			for k in validList:
-				if k == i:
-					continue
-				Ek = self.calculate_Ek(k)
-				delta_E = abs(Ek - Ei)
-				if delta_E > max_delta_E:
-					max_delta_E = delta_E
-					j = k
-					Ej = Ek
-		else:		# 只有i可用（第一次循环）
+		self.Es[i] = Ei
+		if len(self.alphas[(self.alphas != 0) & (self.alphas != self.C)]) > 1:
+			if Ei > 0:
+				j = np.argmin(self.Es)
+			else:
+				j = np.argmax(self.Es)
+		else:		# 第一次循环
 			j = random_select_j(i, self.m)
 			Ej = self.calculate_Ek(j)
 		return j, Ej
@@ -117,15 +116,14 @@ class SVM:
 			if L == H:
 				return 0		# 返回，继续遍历下一个αi
 			# 计算η
-			eta = 2 * self.K[i, j] - self.K[i, i] - self.K[j, j]
+			eta = self.K[i, i] + self.K[j, j] - 2 * self.K[i, j]
 			if eta == 0:
 				return 0
 			# 更新αj
-			print(np.shape())
-			alpha_j = self.alphas[j] + self.Y[j] * (Ei - Ej) / eta
+			alpha_j = self.alphas[j]
+			alpha_j += self.Y[j] * (Ei - Ej) / eta
 			alpha_j = clip_alpha(alpha_j, L, H)
 			self.alphas[j] = alpha_j
-			self.update_Ek(j)
 			epsilon = 0.00001
 			if alpha_j - aj_old < epsilon:
 				return 0		# 若改变值小于ε，返回
@@ -133,7 +131,7 @@ class SVM:
 			alpha_i = ai_old + self.Y[i] * self.Y[j] * \
 				(alpha_j - aj_old)
 			self.alphas[i] = alpha_i
-			self.update_Ek(i)
+			self.update_Es()
 			# 分别计算b1和b2
 			b1 = self.b - Ei - self.Y[i] * (alpha_i - ai_old) * \
 				self.K[i, i] - self.Y[j] * (alpha_j - aj_old) * self.K[j, j]
@@ -157,20 +155,20 @@ class SVM:
 		m = self.m
 		for i in range(m):
 			if self.alphas[i] > 0:
-				print(self.Y[i])
-				print(self.alphas[i])
-				print(self.X[i,:])
 				w += self.Y[i] * self.alphas[i] * self.X[i,:]
+		print(w)
 		self.w = w
 
 	def predict(self, x):
-		p = (x * self.w.T) + self.b
+		kernelEval = kernel(self.X, x, 'lin', 1.3)
+		p = np.multiply(self.Y, self.alphas) * kernelEval + self.b
 		if p > 0:
 			return 1
 		else:
 			return -1
 
 	def test(self, X, Y):
+		Y[Y == 0] = -1
 		TP = 0; FP = 0; FN = 0; TN = 0
 		for i in range(len(Y)):
 			x = X[i]
@@ -212,7 +210,7 @@ def kernel(X, Z, mode= 'rbf', sigma= 0.1):
 			K[j] = delta * delta.T
 		K = np.exp(K/(-1*sigma**2))
 	else:
-		K = X * Z.T
+		K = X * Z.reshape(-1, 1)
 	return K
 
 def read_data():
