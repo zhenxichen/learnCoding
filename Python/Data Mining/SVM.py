@@ -4,10 +4,11 @@ import numpy as np
 import pandas as pd
 
 from sklearn.model_selection import KFold
-
-from sklearn.utils import shuffle
+from prettytable import PrettyTable
 
 # SMO中使用的部分公式可见：https://www.cnblogs.com/lengyue365/p/5043592.html
+
+kernel_mode = 'lin'
 
 class SVM:
 	
@@ -32,7 +33,7 @@ class SVM:
 		self.Es = np.zeros(self.m)
 		self.K = np.mat(np.zeros((self.m, self.m)))
 		for i in range(self.m):
-			self.K[:,i] = kernel(self.X, self.X[i,:], 'lin', 1.3)
+			self.K[:,i] = kernel(self.X, self.X[i,:], kernel_mode, 1.3)
 		self.smo()		# 用SMO快速计算b和α
 		self.weight()
 
@@ -160,7 +161,7 @@ class SVM:
 		self.w = w
 
 	def predict(self, x):
-		kernelEval = kernel(self.X, x, 'lin', 1.3)
+		kernelEval = kernel(self.X, x, kernel_mode, 1.3)
 		p = np.multiply(self.Y, self.alphas) * kernelEval + self.b
 		if p > 0:
 			return 1
@@ -205,10 +206,7 @@ def kernel(X, Z, mode= 'rbf', sigma= 0.1):
 	m, n = np.shape(X)
 	K = np.mat(np.zeros((m, 1)))
 	if mode == 'rbf':
-		for j in range(m):
-			delta = X[j,:] - Z
-			K[j] = delta * delta.T
-		K = np.exp(K/(-1*sigma**2))
+		K = np.exp(-(np.linalg.norm(X-Z, 2, axis=1))**2/2*sigma**2)
 	else:
 		K = X * Z.reshape(-1, 1)
 	return K
@@ -225,15 +223,36 @@ def main():
 	dataset_X, dataset_Y = read_data()
 	kf = KFold(n_splits= 10, shuffle= True)
 	svm = SVM(C=200)
-	count = np.array([0, 0, 0, 0])
+	total_count = 0
+	accurate = 0
+	total_tp = 0; total_fp = 0; total_fn = 0; total_tn = 0
+	macro_P = 0.0; macro_R = 0.0
 	for train_index, test_index in kf.split(dataset_X):
 		train_X, test_X = dataset_X[train_index], dataset_X[test_index]
 		train_Y, test_Y = dataset_Y[train_index], dataset_Y[test_index]
 
 		svm.train(train_X, train_Y)
 		tp, fp, fn, tn = svm.test(test_X, test_Y)
+		total_tp += tp; total_fp += fp; total_fn += fn; total_tn += tn
+		if tp == 0:
+			macro_P += 0
+			macro_R += 0
+		else:
+			macro_P += tp / (tp + fp)
+			macro_R += tp / (tp + fn)
+		total_count += (tp + fp + fn + tn)
+		accurate += (tp + tn)
 		print(tp, fp, fn, tn)
-
+	print("accuracy:", float(accurate)/total_count)
+	micro_P = total_tp / (total_tp + total_fp)
+	micro_R = total_tp / (total_tp + total_fn)
+	micro_F1 = 2 * micro_P * micro_R / (micro_P + micro_R)
+	macro_P /= 10; macro_R /= 10
+	macro_F1 = 2 * macro_P * macro_R / (macro_P + macro_R)
+	table = PrettyTable(['Macro-P', 'Macro-R', 'Macro-F1', \
+		'Micro-P', 'Micro-R', 'Micro-F1'])
+	table.add_row([macro_P, macro_R, macro_F1, micro_P, micro_R, micro_F1])
+	print(table)
 
 if __name__ == "__main__":
 	main()
