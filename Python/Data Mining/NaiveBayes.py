@@ -8,7 +8,6 @@ from math import log2
 
 class NaiveBayes:
 	def __init__(self) -> None:
-		self.summaries = { }	# 提取的属性特征
 		self.prior_dict = { 
 			-1: 0.0,
 			1: 0.0

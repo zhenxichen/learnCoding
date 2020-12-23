@@ -9,6 +9,7 @@ from prettytable import PrettyTable
 # SMO中使用的部分公式可见：https://www.cnblogs.com/lengyue365/p/5043592.html
 
 kernel_mode = 'lin'
+sigma = 20000
 
 class SVM:
 	
@@ -33,7 +34,7 @@ class SVM:
 		self.Es = np.zeros(self.m)
 		self.K = np.mat(np.zeros((self.m, self.m)))
 		for i in range(self.m):
-			self.K[:,i] = kernel(self.X, self.X[i,:], kernel_mode, 1.3)
+			self.K[:,i] = kernel(self.X, self.X[i,:], kernel_mode, sigma)
 		self.smo()		# 用SMO快速计算b和α
 		self.weight()
 
@@ -161,7 +162,7 @@ class SVM:
 		self.w = w
 
 	def predict(self, x):
-		kernelEval = kernel(self.X, x, kernel_mode, 1.3)
+		kernelEval = kernel(self.X, x, kernel_mode, sigma)
 		p = np.multiply(self.Y, self.alphas) * kernelEval + self.b
 		if p > 0:
 			return 1
@@ -206,7 +207,7 @@ def kernel(X, Z, mode= 'rbf', sigma= 0.1):
 	m, n = np.shape(X)
 	K = np.mat(np.zeros((m, 1)))
 	if mode == 'rbf':
-		K = np.exp(-(np.linalg.norm(X-Z, 2, axis=1))**2/2*sigma**2)
+		K = np.exp(-(np.linalg.norm(X-Z, 2, axis=1))**2/(2*sigma**2)).reshape(-1,1)	
 	else:
 		K = X * Z.reshape(-1, 1)
 	return K

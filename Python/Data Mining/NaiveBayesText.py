@@ -20,7 +20,6 @@ tag_array = ['体育', '娱乐', '财经', '时政', '游戏'] # 只选取部分
 
 class MultiNaiveBayes:
 	def __init__(self):
-		self.summarizes = { } # 提取的特征值
 		self.prior_dict = {  # 存储先验概率
 			'体育': 1.0,
 			'娱乐': 1.0,
