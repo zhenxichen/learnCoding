@@ -45,7 +45,7 @@ class SVM:
 		self.b = 0
 		self.alphas = np.zeros(self.m)
 		i = 0
-		maxIter = 200	# 最大迭代次数
+		maxIter = 2000	# 最大迭代次数
 		entireSet = True		# 标记本轮是否进行全集遍历
 		alphaPairsChanged = 0
 		self.update_Es()
@@ -58,7 +58,7 @@ class SVM:
 				entireSet = False
 			else:			# 边界遍历
 				# 选择(0, C)样本点的索引值
-				bound_i = np.nonzero((self.alphas.A > 0)* (self.alphas.A < self.C))[0]
+				bound_i = np.nonzero((self.alphas > 0)* (self.alphas < self.C))[0]
 				for i in bound_i:
 					alphaPairsChanged += self.inner_loop(i)
 			i += 1
