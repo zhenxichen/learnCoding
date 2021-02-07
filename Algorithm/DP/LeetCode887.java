@@ -27,7 +27,7 @@ public class LeetCode887 {
 }
 
 // 解法：动态规划 + 二分搜索
-// 递推公式： dp(K, N) = min(max(dp(K-1,X-1), dp(K,N-X)))
+// 递推公式： dp(K, N) = min(max(dp(K-1,X-1), dp(K,N-X))) + 1
 class Solution {
     public int superEggDrop(int K, int N) {
         int[][] dp = new int[K + 1][N + 1];
@@ -64,6 +64,7 @@ class Solution {
                         low = high = mid;
                     }
                 }
+                // 由于函数是离散的，所以可能并不存在交点，需要对交点两侧的low和high都进行计算，再取其中较小值
                 dp[i][j] = Math.min(Math.max(dp[i - 1][low - 1], dp[i][j - low]),
                         Math.max(dp[i - 1][high - 1], dp[i][j - high])) + 1;
             }
