@@ -1,5 +1,5 @@
-/**
-* ÓÃÓÚ¶Ô·½·¨½øĞĞ²âÊÔµÄÀà
+ï»¿/**
+* ç”¨äºå¯¹æ–¹æ³•è¿›è¡Œæµ‹è¯•çš„ç±»
 */
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -13,9 +13,9 @@ int main() {
 	RGBQUAD* palettes = (RGBQUAD*)malloc(256 * sizeof(RGBQUAD));
 	FILE* fpFrom, * fpTarget;
 	char** imgData = NULL;
-	fpFrom = fopen("D:/QQ/1318135982/FileRecv/¶àÃ½Ìå¿ÎÉè/²âÊÔÍ¼Æ¬/lenna_gray.bmp", "rb");
-	fread(&bf, sizeof(BITMAPFILEHEADER), 1, fpFrom);		// ¶ÁÈ¡ÎÄ¼şÍ·
-	fread(&bi, sizeof(BITMAPINFOHEADER), 1, fpFrom);		// ¶ÁÈ¡ĞÅÏ¢Í·
+	fpFrom = fopen("D:/QQ/1318135982/FileRecv/å¤šåª’ä½“è¯¾è®¾/æµ‹è¯•å›¾ç‰‡/lenna_gray.bmp", "rb");
+	fread(&bf, sizeof(BITMAPFILEHEADER), 1, fpFrom);		// è¯»å–æ–‡ä»¶å¤´
+	fread(&bi, sizeof(BITMAPINFOHEADER), 1, fpFrom);		// è¯»å–ä¿¡æ¯å¤´
 	fread(palettes, sizeof(RGBQUAD), 256, fpFrom);
 	DWORD lineBytes = (DWORD)WIDTHBYTES(bi.biWidth * bi.biBitCount);
 	imgData = (char**)malloc(bi.biHeight * sizeof(char*));
@@ -27,8 +27,8 @@ int main() {
 	}
 	fclose(fpFrom);
 	grayToBinaryByThreshold(bf, bi, palettes, imgData, 60);
-	// Ğ´Èë½á¹û
-	fpTarget = fopen("D:/QQ/1318135982/FileRecv/¶àÃ½Ìå¿ÎÉè/res/lenna_bin.bmp", "wb");
+	// å†™å…¥ç»“æœ
+	fpTarget = fopen("D:/QQ/1318135982/FileRecv/å¤šåª’ä½“è¯¾è®¾/res/lenna_bin.bmp", "wb");
 	fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, fpTarget);
 	fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, fpTarget);
 	fwrite(palettes, sizeof(RGBQUAD), 256, fpTarget);

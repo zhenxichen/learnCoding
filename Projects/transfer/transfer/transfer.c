@@ -1,17 +1,17 @@
-#include "transfer.h"
+ï»¿#include "transfer.h"
 
 unsigned char** grayToBinaryByThreshold(BITMAPFILEHEADER bitMapFileHeader,
 	BITMAPINFOHEADER bitMapInfoHeader, RGBQUAD* palettes, unsigned char** imgData, char threshold) {
-	LONG width = bitMapInfoHeader.biWidth;		// ¿í¶È
-	LONG height = bitMapInfoHeader.biHeight;	// ¸ß¶È
-	LONG count = bitMapInfoHeader.biBitCount;	// Î»Éî
-	DWORD lineBytes = (DWORD)WIDTHBYTES(width * count);		// Ã¿ĞĞµÄ×Ö½ÚÊı
-	// ÓÉÓÚ¶ÁÈ¡ÎÄ¼şÊ±ÒÑ¾­µ¹Ğò¶ÁÈë£¬ÕâÀïÖ»ĞèÒªË³Ğò¶ÁÈ¡¼´¿É
+	LONG width = bitMapInfoHeader.biWidth;		// å®½åº¦
+	LONG height = bitMapInfoHeader.biHeight;	// é«˜åº¦
+	LONG count = bitMapInfoHeader.biBitCount;	// ä½æ·±
+	DWORD lineBytes = (DWORD)WIDTHBYTES(width * count);		// æ¯è¡Œçš„å­—èŠ‚æ•°
+	// ç”±äºè¯»å–æ–‡ä»¶æ—¶å·²ç»å€’åºè¯»å…¥ï¼Œè¿™é‡Œåªéœ€è¦é¡ºåºè¯»å–å³å¯
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < lineBytes; j++) {
-			char index = imgData[i][j];		// »ñÈ¡ÑÕÉ«¶ÔÓ¦µÄµ÷É«°åË÷Òı
-			RGBQUAD color = palettes[index];		// ¸ù¾İË÷Òı»ñÈ¡¶ÔÓ¦µÄµ÷É«°å
-			BYTE gray = color.rgbRed;		// »Ò¶ÈÍ¼µÄRGBÊıÖµÏàµÈ£¬Òò´ËÖ»ĞèÈ¡ÆäÖĞÒ»¸ö
+			char index = imgData[i][j];		// è·å–é¢œè‰²å¯¹åº”çš„è°ƒè‰²æ¿ç´¢å¼•
+			RGBQUAD color = palettes[index];		// æ ¹æ®ç´¢å¼•è·å–å¯¹åº”çš„è°ƒè‰²æ¿
+			BYTE gray = color.rgbRed;		// ç°åº¦å›¾çš„RGBæ•°å€¼ç›¸ç­‰ï¼Œå› æ­¤åªéœ€å–å…¶ä¸­ä¸€ä¸ª
 			if (gray >= threshold) {
 				imgData[i][j] = 255;
 			}
@@ -25,19 +25,19 @@ unsigned char** grayToBinaryByThreshold(BITMAPFILEHEADER bitMapFileHeader,
 
 unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 	BITMAPINFOHEADER bitMapInfoHeader, RGBQUAD* palettes, unsigned char** imgData, int matrixSize) {
-	LONG width = bitMapInfoHeader.biWidth;		// ¿í¶È
-	LONG height = bitMapInfoHeader.biHeight;	// ¸ß¶È
-	LONG count = bitMapInfoHeader.biBitCount;	// Î»Éî
-	DWORD lineBytes = (DWORD)WIDTHBYTES(width * count);		// Ã¿ĞĞµÄ×Ö½ÚÊı
-	// ½«Í¼Æ¬Êı¾İ·¶Î§½øĞĞÑ¹Ëõ
+	LONG width = bitMapInfoHeader.biWidth;		// å®½åº¦
+	LONG height = bitMapInfoHeader.biHeight;	// é«˜åº¦
+	LONG count = bitMapInfoHeader.biBitCount;	// ä½æ·±
+	DWORD lineBytes = (DWORD)WIDTHBYTES(width * count);		// æ¯è¡Œçš„å­—èŠ‚æ•°
+	// å°†å›¾ç‰‡æ•°æ®èŒƒå›´è¿›è¡Œå‹ç¼©
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < lineBytes; j++) {
 			imgData[i][j] = imgData[i][j] * (matrixSize * matrixSize + 1) / 256;
 		}
 	}
-	unsigned char** ditherMatrix = getDitherMatrix(matrixSize);		// ¼ÆËãdither¾ØÕó
+	unsigned char** ditherMatrix = getDitherMatrix(matrixSize);		// è®¡ç®—ditherçŸ©é˜µ
 	unsigned char** outputData = (unsigned char**)malloc(matrixSize * height * sizeof(unsigned char*));
-	// ÀûÓÃdither¾ØÕó½øĞĞ¶şÖµ»¯
+	// åˆ©ç”¨ditherçŸ©é˜µè¿›è¡ŒäºŒå€¼åŒ–
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			int x = i * matrixSize;
@@ -55,10 +55,12 @@ unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 }
 
 unsigned char** getDitherMatrix(int n) {
+	// allocate memory
 	char** matrix = (char**)malloc(n * sizeof(char*));
 	for (int i = 0; i < n; i++) {
 		matrix[i] = (char*)malloc(n * sizeof(char));
 	}
+	// é€’å½’åŸº
 	if (n == 2) {
 		matrix[0][0] = 0;
 		matrix[0][1] = 2;
@@ -66,6 +68,22 @@ unsigned char** getDitherMatrix(int n) {
 		matrix[1][1] = 3;
 		return matrix;
 	}
+	// é€’å½’è°ƒç”¨ï¼Œè·å–ä¸Šä¸€çº§DitherçŸ©é˜µ
+	char** originMatrix = getDitherMatrix(n / 2);
+	// é€šè¿‡D(n/2)è®¡ç®—å½“å‰DitherçŸ©é˜µ
+	//	4D(n/2)				4D(n/2) + 2U(n/2) 
+	//  4D(n/2) + 3U(n/2)	4D(n/2) + U(n/2)
+	for (int i = 0; i < n / 2; i++) {
+		for (int j = 0; j < n / 2; j++) {
+			matrix[i][j] = 4 * originMatrix[i][j];		// å·¦ä¸Š: 4D(n/2)
+			matrix[n / 2 + i][j] = 4 * originMatrix[i][j] + 3;	// å·¦ä¸‹: 4D(n/2) + 3U(n/2)
+			matrix[i][n / 2 + j] = 4 * originMatrix[i][j] + 2;	// å³ä¸Š: 4D(n/2) + 2U(n/2)
+			matrix[n / 2 + i][n / 2 + j] = 4 * originMatrix[i][j] + 1;	// å³ä¸‹: 4D(n/2) + U(n/2)
+		}
+	}
+	// free D(N/2)'s memory, avoid memory leak.
+	free(originMatrix);
+	return matrix;
 }
 
 BITMAPINFOHEADER getBinaryInfoHeaderByThreshold(BITMAPINFOHEADER bi) {
