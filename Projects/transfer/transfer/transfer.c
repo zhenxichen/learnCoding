@@ -36,7 +36,12 @@ unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 		}
 	}
 	unsigned char** ditherMatrix = getDitherMatrix(matrixSize);		// 计算dither矩阵
-	unsigned char** outputData = (unsigned char**)malloc(matrixSize * height * sizeof(unsigned char*));
+	// allocate memory for output matrix
+	int outputSize = matrixSize * height;
+	unsigned char** outputData = (unsigned char**)malloc(outputSize * sizeof(unsigned char*));
+	for (int i = 0; i < outputSize; i++) {
+		outputData[i] = (unsigned char*)malloc(outputSize * sizeof(unsigned char));
+	}
 	// 利用dither矩阵进行二值化
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
@@ -45,13 +50,16 @@ unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 			for (int ditherI = 0; ditherI < matrixSize; ditherI++) {
 				for (int ditherJ = 0; ditherJ < matrixSize; ditherJ++) {
 					if (imgData[i][j] >= ditherMatrix[ditherI][ditherJ]) {
-
+						outputData[x + ditherI][y + ditherJ] = 255;
+					}
+					else {
+						outputData[x + ditherI][y + ditherJ] = 0;
 					}
 				}
 			}
 		}
 	}
-	return NULL;
+	return outputData;
 }
 
 unsigned char** getDitherMatrix(int n) {
@@ -106,4 +114,19 @@ RGBQUAD* getBinaryRGBQuad() {
 	rgbQuad[0] = white;
 	rgbQuad[1] = black;
 	return rgbQuad;
+}
+
+BITMAPINFOHEADER getBinaryInfoHeaderByDither(BITMAPINFOHEADER bi, int n) {
+	bi.biHeight = n * bi.biHeight;
+	bi.biWidth = n * bi.biWidth;
+	bi.biSizeImage = bi.biHeight * bi.biWidth;
+	return bi;
+}
+
+BITMAPFILEHEADER getBinaryFileHeaderByDither(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, int n) {
+	DWORD grayImageDataSize = bi.biSizeImage;		// 灰度图的图片数据大小
+	bf.bfSize -= grayImageDataSize;
+	DWORD binaryImageDataSize = bi.biSizeImage * n * n;		// 二值图的图片数据大小
+	bf.bfSize += binaryImageDataSize;
+	return bf;
 }

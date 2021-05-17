@@ -13,7 +13,7 @@ int main() {
 	RGBQUAD* palettes = (RGBQUAD*)malloc(256 * sizeof(RGBQUAD));
 	FILE* fpFrom, * fpTarget;
 	char** imgData = NULL;
-	fpFrom = fopen("D:/QQ/1318135982/FileRecv/多媒体课设/测试图片/lenna_gray.bmp", "rb");
+	fpFrom = fopen("resources/lenna_gray.bmp", "rb");
 	fread(&bf, sizeof(BITMAPFILEHEADER), 1, fpFrom);		// 读取文件头
 	fread(&bi, sizeof(BITMAPINFOHEADER), 1, fpFrom);		// 读取信息头
 	fread(palettes, sizeof(RGBQUAD), 256, fpFrom);
@@ -26,9 +26,13 @@ int main() {
 		fread(imgData[i], lineBytes, 1, fpFrom);
 	}
 	fclose(fpFrom);
-	grayToBinaryByThreshold(bf, bi, palettes, imgData, 60);
+	// grayToBinaryByThreshold(bf, bi, palettes, imgData, 60);
+	imgData = grayToBinaryByDither(bf, bi, palettes, imgData, 4);
+	bf = getBinaryFileHeaderByDither(bf, bi, 4);
+	bi = getBinaryInfoHeaderByDither(bi, 4);
+	lineBytes = (DWORD)WIDTHBYTES(bi.biWidth * bi.biBitCount);
 	// 写入结果
-	fpTarget = fopen("D:/QQ/1318135982/FileRecv/多媒体课设/res/lenna_bin.bmp", "wb");
+	fpTarget = fopen("res/lenna_bin.bmp", "wb");
 	fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, fpTarget);
 	fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, fpTarget);
 	fwrite(palettes, sizeof(RGBQUAD), 256, fpTarget);

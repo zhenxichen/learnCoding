@@ -7,9 +7,15 @@
 #define WIDTHBYTES(i) ((i+31)/32*4)
 #define BINARYWIDTH(i) ((i+3)/4*4)
 
-/**
-* 通过单阈值法将图片从灰度图转为二值图
-*/
+/// <summary>
+/// 通过单阈值法将图片从灰度图转为二值图
+/// </summary>
+/// <param name="bitMapFileHeader">灰度图的文件头</param>
+/// <param name="bitMapInfoHeader">灰度图的信息头</param>
+/// <param name="palettes">灰度图的调色板</param>
+/// <param name="imgData">灰度图的图片数据</param>
+/// <param name="threshold">单阈值法的阈值</param>
+/// <returns>二值图的图片数据</returns>
 unsigned char** grayToBinaryByThreshold(BITMAPFILEHEADER bitMapFileHeader,
 	BITMAPINFOHEADER bitMapInfoHeader, RGBQUAD* palettes, unsigned char** imgData, char threshold);
 
@@ -19,9 +25,11 @@ unsigned char** grayToBinaryByThreshold(BITMAPFILEHEADER bitMapFileHeader,
 unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 	BITMAPINFOHEADER bitMapInfoHeader, RGBQUAD* palettes, unsigned char** imgData, int matrixSize);
 
-/**
-* 生成Dither矩阵
-*/
+/// <summary>
+/// 生成n*n的Dither矩阵
+/// </summary>
+/// <param name="n">矩阵的尺寸（必须为2的整数倍）</param>
+/// <returns>Dither矩阵</returns>
 unsigned char** getDitherMatrix(int n);
 
 /**
@@ -38,5 +46,21 @@ BITMAPFILEHEADER getBinaryFileHeaderByThreshold(BITMAPFILEHEADER bf);
 * 生成二值图的调色盘
 */
 RGBQUAD* getBinaryRGBQuad();
+
+/// <summary>
+/// 生成二值图的信息头（Dither）
+/// </summary>
+/// <param name="bi">灰度图的信息头</param>
+/// <param name="n">Dither矩阵的大小为n*n</param>
+/// <returns></returns>
+BITMAPINFOHEADER getBinaryInfoHeaderByDither(BITMAPINFOHEADER bi, int n);
+
+/// <summary>
+/// 生成二值图的文件头（Dither）
+/// </summary>
+/// <param name="bf">灰度图的文件头</param>
+/// <param name="n">Dither矩阵的大小</param>
+/// <returns></returns>
+BITMAPFILEHEADER getBinaryFileHeaderByDither(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, int n);
 
 #endif // !_TRANSFER_H_
