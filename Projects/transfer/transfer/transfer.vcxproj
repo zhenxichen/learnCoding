@@ -123,9 +123,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="examples.h" />
     <ClInclude Include="transfer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="examples.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="transfer.c" />
   </ItemGroup>

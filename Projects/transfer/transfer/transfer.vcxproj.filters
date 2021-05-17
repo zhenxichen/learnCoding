@@ -18,12 +18,18 @@
     <ClInclude Include="transfer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="examples.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="transfer.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="examples.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

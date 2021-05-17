@@ -59,7 +59,37 @@ unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 			}
 		}
 	}
+	free(imgData);
 	return outputData;
+}
+
+unsigned char** grayToBinaryByOrderedDither(BITMAPFILEHEADER bitMapFileHeader,
+	BITMAPINFOHEADER bitMapInfoHeader, RGBQUAD* palettes, unsigned char** imgData, int matrixSize) {
+	LONG width = bitMapInfoHeader.biWidth;		// 宽度
+	LONG height = bitMapInfoHeader.biHeight;	// 高度
+	LONG count = bitMapInfoHeader.biBitCount;	// 位深
+	DWORD lineBytes = (DWORD)WIDTHBYTES(width * count);		// 每行的字节数
+	// 将图片数据范围进行压缩
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < lineBytes; j++) {
+			imgData[i][j] = imgData[i][j] * (matrixSize * matrixSize + 1) / 256;
+		}
+	}
+	unsigned char** ditherMatrix = getDitherMatrix(matrixSize);		// 计算dither矩阵
+	// 在图像矩阵中滑动Dither矩阵
+	for (int i = 0; i < width; i++) {
+		int x = i % matrixSize;
+		for (int j = 0; j < height; j++) {
+			int y = j % matrixSize;
+			if (imgData[i][j] > ditherMatrix[x][y]) {
+				imgData[i][j] = 255;
+			}
+			else {
+				imgData[i][j] = 0;
+			}
+		}
+	}
+	return imgData;
 }
 
 unsigned char** getDitherMatrix(int n) {
