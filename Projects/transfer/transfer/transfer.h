@@ -53,20 +53,14 @@ unsigned char** grayToBinaryByOrderedDither(BITMAPFILEHEADER bitMapFileHeader,
 /// <returns>Dither矩阵</returns>
 unsigned char** getDitherMatrix(int n);
 
-/**
-* 生成二值图的信息头（单阈值法）
-*/
-BITMAPINFOHEADER getBinaryInfoHeaderByThreshold(BITMAPINFOHEADER bi);
-
-/**
-* 生成二值图的文件头（单阈值法）
-*/
-BITMAPFILEHEADER getBinaryFileHeaderByThreshold(BITMAPFILEHEADER bf);
-
-/**
-* 生成二值图的调色盘
-*/
-RGBQUAD* getBinaryRGBQuad();
+/// <summary>
+/// 利用RGB-HSI的算法计算得到的亮度分量将24位真彩色图转为灰度图
+/// 注：返回的灰度图需要另行添加调色板
+/// </summary>
+/// <param name="bf">真彩色图的文件头</param>
+/// <param name="bi">真彩色图的信息头</param>
+/// <returns>灰度图的图像数据</returns>
+unsigned char** colorToGrayByRGBtoHSI(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, unsigned char*** imgData);
 
 /// <summary>
 /// 生成二值图的信息头（Dither）
@@ -83,5 +77,21 @@ BITMAPINFOHEADER getBinaryInfoHeaderByDither(BITMAPINFOHEADER bi, int n);
 /// <param name="n">Dither矩阵的大小</param>
 /// <returns>Dither对应的二值图的文件头</returns>
 BITMAPFILEHEADER getBinaryFileHeaderByDither(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, int n);
+
+/// <summary>
+/// 生成灰度图的调色板
+/// </summary>
+/// <returns>RGBQUAD指针，存储灰度图的256个颜色</returns>
+RGBQUAD* getGrayPalettes();
+
+/// <summary>
+/// 将24位真彩色图的文件头转为灰度图的文件头
+/// </summary>
+/// <param name="bf"></param>
+/// <param name="bi"></param>
+/// <returns></returns>
+BITMAPFILEHEADER getGrayFileHeader(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi);
+
+BITMAPINFOHEADER getGrayInfoHeader(BITMAPINFOHEADER bi);
 
 #endif // !_TRANSFER_H_

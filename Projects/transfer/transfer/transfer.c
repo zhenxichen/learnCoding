@@ -23,6 +23,7 @@ unsigned char** grayToBinaryByThreshold(BITMAPFILEHEADER bitMapFileHeader,
 	return imgData;
 }
 
+
 unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 	BITMAPINFOHEADER bitMapInfoHeader, RGBQUAD* palettes, unsigned char** imgData, int matrixSize) {
 	LONG width = bitMapInfoHeader.biWidth;		// 宽度
@@ -59,9 +60,9 @@ unsigned char** grayToBinaryByDither(BITMAPFILEHEADER bitMapFileHeader,
 			}
 		}
 	}
-	free(imgData);
 	return outputData;
 }
+
 
 unsigned char** grayToBinaryByOrderedDither(BITMAPFILEHEADER bitMapFileHeader,
 	BITMAPINFOHEADER bitMapInfoHeader, RGBQUAD* palettes, unsigned char** imgData, int matrixSize) {
@@ -91,6 +92,7 @@ unsigned char** grayToBinaryByOrderedDither(BITMAPFILEHEADER bitMapFileHeader,
 	}
 	return imgData;
 }
+
 
 unsigned char** getDitherMatrix(int n) {
 	// allocate memory
@@ -124,27 +126,28 @@ unsigned char** getDitherMatrix(int n) {
 	return matrix;
 }
 
-BITMAPINFOHEADER getBinaryInfoHeaderByThreshold(BITMAPINFOHEADER bi) {
-	bi.biBitCount = 1;
-	return bi;
+
+unsigned char** colorToGrayByRGBtoHSI(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, unsigned char*** imgData) {
+	DWORD rgbLineBytes = (DWORD)WIDTHBYTES(bi.biWidth * bi.biBitCount);	// 计算真彩色图片的每行字节数
+	DWORD grayLineBytes = (DWORD)WIDTHBYTES(bi.biWidth * 8);	// 计算灰度图的每行字节数
+	// 为存储输出数据的矩阵分配内存空间
+	unsigned char** outputData = (unsigned char**)malloc(bi.biHeight * sizeof(unsigned char*));
+	for (int i = 0; i < bi.biHeight; i++) {
+		outputData[i] = (unsigned char*)malloc(grayLineBytes);
+	}
+	// 利用RGB-HSI计算亮度分量
+	for (int i = 0; i < bi.biHeight; i++) {
+		for (int j = 0; j < bi.biWidth; j++) {
+			BYTE red = imgData[i][j][0];
+			BYTE green = imgData[i][j][1];
+			BYTE blue = imgData[i][j][2];
+			BYTE intensity = red / 3 + green / 3 + blue / 3;	// I = (R+G+B) / 3
+			outputData[i][j] = intensity;
+		}
+	}
+	return outputData;
 }
 
-BITMAPFILEHEADER getBinaryFileHeaderByThreshold(BITMAPFILEHEADER bf) {
-	bf.bfSize -= (254 * sizeof(RGBQUAD));
-	bf.bfOffBits -= (254 * sizeof(RGBQUAD));
-	return bf;
-}
-
-RGBQUAD* getBinaryRGBQuad() {
-	RGBQUAD* rgbQuad = (RGBQUAD*)malloc(2 * sizeof(RGBQUAD));
-	RGBQUAD white;
-	white.rgbRed = 0; white.rgbGreen = 0; white.rgbBlue = 0; white.rgbReserved = 0;
-	RGBQUAD black;
-	black.rgbRed = 255; black.rgbGreen = 255; black.rgbBlue = 255; black.rgbReserved = 0;
-	rgbQuad[0] = white;
-	rgbQuad[1] = black;
-	return rgbQuad;
-}
 
 BITMAPINFOHEADER getBinaryInfoHeaderByDither(BITMAPINFOHEADER bi, int n) {
 	bi.biHeight = n * bi.biHeight;
@@ -159,4 +162,32 @@ BITMAPFILEHEADER getBinaryFileHeaderByDither(BITMAPFILEHEADER bf, BITMAPINFOHEAD
 	DWORD binaryImageDataSize = bi.biSizeImage * n * n;		// 二值图的图片数据大小
 	bf.bfSize += binaryImageDataSize;
 	return bf;
+}
+
+
+RGBQUAD* getGrayPalettes() {
+	RGBQUAD* palettes = (RGBQUAD*)malloc(256 * sizeof(RGBQUAD));
+	for (int i = 0; i < 256; i++) {
+		RGBQUAD rgbQuad;
+		rgbQuad.rgbRed = i;
+		rgbQuad.rgbGreen = i;
+		rgbQuad.rgbBlue = i;
+		rgbQuad.rgbReserved = 0;
+		palettes[i] = rgbQuad;
+	}
+	return palettes;
+}
+
+BITMAPFILEHEADER getGrayFileHeader(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi) {
+	bf.bfOffBits += (256 * sizeof(RGBQUAD));		// 偏移量在原有的基础上加上调色板的bit数
+	// 调整bitmap文件的大小
+	bf.bfSize += 256 * sizeof(RGBQUAD);
+	bf.bfSize -= 2 * bi.biWidth * bi.biHeight;
+	return bf;
+}
+
+BITMAPINFOHEADER getGrayInfoHeader(BITMAPINFOHEADER bi) {
+	bi.biBitCount = 8;
+	bi.biSizeImage = bi.biSizeImage / 3;
+	return bi;
 }

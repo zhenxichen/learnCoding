@@ -20,5 +20,10 @@ void g2bDitherExample();
 /// </summary>
 void g2bOrderedDitherExample();
 
+/// <summary>
+/// 通过RGB-HSI的方法计算亮度分量，并由此将24位真彩色图转为8位灰度图
+/// </summary>
+void c2gHSIExample();
+
 #endif // !_EXAMPLES_H_
 
