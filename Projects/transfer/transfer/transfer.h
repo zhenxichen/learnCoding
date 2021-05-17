@@ -59,8 +59,18 @@ unsigned char** getDitherMatrix(int n);
 /// </summary>
 /// <param name="bf">真彩色图的文件头</param>
 /// <param name="bi">真彩色图的信息头</param>
+/// <param name="imgData">图像数据</param>
 /// <returns>灰度图的图像数据</returns>
 unsigned char** colorToGrayByRGBtoHSI(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, unsigned char*** imgData);
+
+/// <summary>
+/// 利用RGB-YCbCr的算法得到的亮度分量将24位真彩色图转为灰度图
+/// </summary>
+/// <param name="bf">真彩色图的文件头</param>
+/// <param name="bi">真彩色图的信息头</param>
+/// <param name="imgData">图像数据</param>
+/// <returns>灰度图的图像数据</returns>
+unsigned char** colorToGrayByRGBtoYCbCr(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, unsigned char*** imgData);
 
 /// <summary>
 /// 生成二值图的信息头（Dither）
@@ -87,11 +97,16 @@ RGBQUAD* getGrayPalettes();
 /// <summary>
 /// 将24位真彩色图的文件头转为灰度图的文件头
 /// </summary>
-/// <param name="bf"></param>
-/// <param name="bi"></param>
-/// <returns></returns>
+/// <param name="bf">文件头</param>
+/// <param name="bi">信息头</param>
+/// <returns>转换后的文件头</returns>
 BITMAPFILEHEADER getGrayFileHeader(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi);
 
+/// <summary>
+/// 将24位真彩色图的信息头转为灰度图的信息头
+/// </summary>
+/// <param name="bi">信息头</param>
+/// <returns>转换后的信息头</returns>
 BITMAPINFOHEADER getGrayInfoHeader(BITMAPINFOHEADER bi);
 
 #endif // !_TRANSFER_H_

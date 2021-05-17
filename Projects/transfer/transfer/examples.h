@@ -25,5 +25,10 @@ void g2bOrderedDitherExample();
 /// </summary>
 void c2gHSIExample();
 
+/// <summary>
+/// 通过RGB-YCbCr的方法计算亮度分量，并由此将24位真彩色图转为8位灰度图
+/// </summary>
+void c2gYCbCrExample();
+
 #endif // !_EXAMPLES_H_
 

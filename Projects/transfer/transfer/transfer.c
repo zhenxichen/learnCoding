@@ -148,6 +148,26 @@ unsigned char** colorToGrayByRGBtoHSI(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, 
 	return outputData;
 }
 
+unsigned char** colorToGrayByRGBtoYCbCr(BITMAPFILEHEADER bf, BITMAPINFOHEADER bi, unsigned char*** imgData) {
+	DWORD rgbLineBytes = (DWORD)WIDTHBYTES(bi.biWidth * bi.biBitCount);	// 计算真彩色图片的每行字节数
+	DWORD grayLineBytes = (DWORD)WIDTHBYTES(bi.biWidth * 8);	// 计算灰度图的每行字节数
+	// 为存储输出数据的矩阵分配内存空间
+	unsigned char** outputData = (unsigned char**)malloc(bi.biHeight * sizeof(unsigned char*));
+	for (int i = 0; i < bi.biHeight; i++) {
+		outputData[i] = (unsigned char*)malloc(grayLineBytes);
+	}
+	// 利用RGB-YCbCr计算亮度分量
+	for (int i = 0; i < bi.biHeight; i++) {
+		for (int j = 0; j < bi.biWidth; j++) {
+			BYTE red = imgData[i][j][0];
+			BYTE green = imgData[i][j][1];
+			BYTE blue = imgData[i][j][2];
+			double y = (red * 0.2990 + green * 0.5870 + blue * 0.1140);
+			outputData[i][j] = (unsigned char)y;
+		}
+	}
+	return outputData;
+}
 
 BITMAPINFOHEADER getBinaryInfoHeaderByDither(BITMAPINFOHEADER bi, int n) {
 	bi.biHeight = n * bi.biHeight;

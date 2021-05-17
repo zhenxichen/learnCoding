@@ -158,3 +158,48 @@ void c2gHSIExample() {
 	free(rgbQuads);
 	free(outputData);
 }
+
+void c2gYCbCrExample() {
+	BITMAPFILEHEADER bf;
+	BITMAPINFOHEADER bi;
+	unsigned char*** imgData = NULL;
+	FILE* fpFrom, * fpTarget;
+	fpFrom = fopen("resources/lenna.bmp", "rb");		// 打开一张24位真彩色图片
+	fread(&bf, sizeof(BITMAPFILEHEADER), 1, fpFrom);	// 读取文件头
+	fread(&bi, sizeof(BITMAPINFOHEADER), 1, fpFrom);	// 读取信息头
+	// 为存储图片数据的指针分配内存空间
+	imgData = (unsigned char***)malloc(bi.biHeight * sizeof(unsigned char**));
+	for (int i = 0; i < bi.biHeight; i++) {
+		imgData[i] = (unsigned char**)malloc(bi.biWidth * sizeof(unsigned char*));
+		for (int j = 0; j < bi.biWidth; j++) {
+			imgData[i][j] = (unsigned char*)malloc(3 * sizeof(unsigned char));		// 每个像素分配三个字节空间存储RGB
+		}
+	}
+	// 从图片文件中读取图片数据
+	for (int i = bi.biHeight - 1; i >= 0; i--) {
+		for (int j = 0; j < bi.biWidth; j++) {
+			fread(imgData[i][j], 3, 1, fpFrom);			// 读取当前像素的RGB值
+		}
+	}
+	fclose(fpFrom);
+	// 函数调用示例范围
+	char** outputData = NULL;
+	outputData = colorToGrayByRGBtoYCbCr(bf, bi, imgData);
+	bf = getGrayFileHeader(bf, bi);
+	bi = getGrayInfoHeader(bi);
+	RGBQUAD* rgbQuads = getGrayPalettes();
+	// 函数调用示例范围
+	DWORD lineBytes = (DWORD)WIDTHBYTES(bi.biWidth * bi.biBitCount);
+	// 写入文件
+	fpTarget = fopen("res/lenna_gray.bmp", "wb");
+	fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, fpTarget);
+	fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, fpTarget);
+	fwrite(rgbQuads, sizeof(RGBQUAD), 256, fpTarget);
+	for (int i = bi.biHeight - 1; i >= 0; i--) {
+		fwrite(outputData[i], lineBytes, 1, fpTarget);
+	}
+	fclose(fpTarget);
+	free(imgData);
+	free(rgbQuads);
+	free(outputData);
+}
