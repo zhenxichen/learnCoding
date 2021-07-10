@@ -40,9 +40,9 @@ instance Show Phone where
 readPhone :: String -> String -> String -> Phone
 readPhone sPhoneType sCountryCode sPhoneNo =
     let phoneType = getPhoneType sPhoneType
-    let countryCode
-    | head sCountryCode == '+'          = read 
-    in Phone WorkLandline 1 1
+        countryCode = checkCountryCode (getCountryCode sCountryCode)
+        phoneNo = getPhoneNo sPhoneNo
+    in Phone phoneType countryCode phoneNo
 
 getPhoneType :: String -> PhoneType
 getPhoneType sPhoneType
@@ -54,14 +54,29 @@ getPhoneType sPhoneType
     | otherwise                         = error "Incorrect phone type"
 
 isNum :: Char -> Bool
-isNum x = x `elem` ['0'...'9']
+isNum x = x `elem` ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 isAllNum :: [Char] -> Bool
 isAllNum x = all isNum x
 
-getCountryCode :: String -> CountryCode
+getCountryCode :: String -> Integer
 getCountryCode ""                   = error "Empty country code"
 getCountryCode sCountryCode
     | head sCountryCode == '+'      = getCountryCode (tail sCountryCode)
+    | head sCountryCode == '-'      = if isAllNum (tail sCountryCode) 
+                                        then error "Negative country code" 
+                                        else error "Incorrect country code"
     | isAllNum sCountryCode         = read sCountryCode :: Integer
     | otherwise                     = error "Incorrect country code"
+
+checkCountryCode :: Integer -> CountryCode
+checkCountryCode cc
+    | (toInteger cc) `elem` [1, 2, 86]        = CountryCode cc
+    | otherwise                               = error "Unknown country code"
+
+getPhoneNo :: String -> PhoneNo
+getPhoneNo ""                       = error "Empty phone number"
+getPhoneNo no
+    | head no == '-'                = error "Negative phone number"
+    | isAllNum no                   = PhoneNo (read no :: Integer)
+    | otherwise                     = error "Incorrect phone number"
